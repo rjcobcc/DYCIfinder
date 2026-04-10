@@ -1,7 +1,7 @@
 <?php
 function getFoundReports($conn, $filters, $page = 1) {
     $limit = 10;
-    $sql = "SELECT id, item_name, location_found, date_found FROM found_reports WHERE 1=1";
+    $sql = "SELECT id, item_name, item_category, location_found, date_found FROM found_reports WHERE 1=1";
     $params = [];
     $types = "";
     if (!empty($filters['keyword'])) {
@@ -25,7 +25,12 @@ function getFoundReports($conn, $filters, $page = 1) {
     $limit = max(1, (int)$limit);
     $offset = ($page - 1) * $limit;
 
-    $sql .= " ORDER BY created_at DESC LIMIT ? OFFSET ?";
+    if ($filters['order'] == 'Oldest first') {
+        $sql .= " ORDER BY date_found ASC LIMIT ? OFFSET ?"; 
+    }
+    else {
+        $sql .= " ORDER BY date_found DESC LIMIT ? OFFSET ?";
+    }
 
     $params[] = $limit;
     $params[] = $offset;
@@ -61,5 +66,16 @@ function insertFoundReport($conn, $data) {
 
     $stmt->close();
     return $insertId;
+}
+
+function getFoundReportById($conn, $id) {
+    $sql = "SELECT id, item_name, item_category, location_found, date_found FROM found_reports WHERE id = ? LIMIT 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $report = $result->fetch_assoc();
+    $stmt->close();
+    return $report;
 }
 ?>

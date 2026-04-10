@@ -2,14 +2,11 @@ import { API } from '../conf/api.js';
 
 document.getElementById("prevPageButton").addEventListener("click",prevPage);
 document.getElementById("nextPageButton").addEventListener("click",nextPage);
-document.getElementById("searchButton").addEventListener("click",reloadFoundPostings);
-document.getElementById("sortOptions").addEventListener("change",reorderFoundPostings);
+document.getElementById("searchButton").addEventListener("click",searchFoundPostings);
 
 const orderSelection = document.getElementById("sortOptions");
 const foundPostTemplate = document.getElementById("foundPostTemplate");
 const foundPostsContainer = document.getElementById("foundPosts");
-
-let foundPostings;
 
 initPage();
 reloadFoundPostings();
@@ -20,23 +17,26 @@ async function reloadFoundPostings() {
     const keyword = document.getElementById("keywordInput").value.trim();
     const category = document.getElementById("categorySelection").value;
     const location = document.getElementById("locationSelection").value;
+    const order = orderSelection.value;
 
-    const result = await fetch(API + '/get_found.php', {
+    console.log(order);
+
+    const result = await fetch(API + '/get_founds.php', {
         method: "POST",
         headers: {
             "Content-Type":
             "application/json"
         },
         body: JSON.stringify({
-            keyword, category, location, page
+            keyword, category, location, order, page, 
         })
     });
     const response = await result.json();
-    foundPostings = response.data;
-    console.log(foundPostings);
+    const data = response.data;
+    console.log(data);
 
     clearFoundPostings();
-    loadFoundPostings();
+    loadFoundPostings(data);
 }
 
 function clearFoundPostings() {
@@ -47,33 +47,27 @@ function clearFoundPostings() {
     });
 }
 
-function loadFoundPostings() {
-    if (orderSelection.value == "Newest first") {
-        for (let i = 0; i < foundPostings.length; i++) {
-            loadFoundPosting(foundPostings[i]);
-        }
-    }
-    else {
-        for (let i = foundPostings.length-1; i >= 0; i--) {
-            loadFoundPosting(foundPostings[i]);
-        }
+function loadFoundPostings(data) {
+    for (let i = 0; i < data.length; i++) {
+        let post = data[i];
+        const clone = foundPostTemplate.content.cloneNode(true);
+        clone.querySelector(".title").textContent = post['item_name'];
+        clone.querySelector(".location").textContent = "Found at: " + post['location_found'];
+        clone.querySelector(".date").textContent = "Found on: " + post['date_found'];
+        clone.querySelector(".category").textContent = "Category: " + post['item_category'];
+        clone.querySelector(".claimButton").addEventListener("click", function () {
+            window.location.href = `post_claim.html?item_id=${post['id']}`;
+        });
+        foundPostsContainer.appendChild(clone);
     }
 }
 
-function loadFoundPosting(post) {
-    const clone = foundPostTemplate.content.cloneNode(true);
-    clone.querySelector(".title").textContent = post['item_name'];
-    clone.querySelector(".location").textContent = "Found at: " + post['location_found'];
-    clone.querySelector(".date").textContent = "Found on: " + post['date_found'];
-    clone.querySelector(".claimButton").addEventListener("click", function () {
-        window.location.href = `post_claim.html?item_id=${post['id']}`;
-    });
-    foundPostsContainer.appendChild(clone);
-}
-
-function reorderFoundPostings() {
-    clearFoundPostings();
-    loadFoundPostings();
+function searchFoundPostings() {
+    const params = new URLSearchParams(window.location.search);
+    params.set("page", 1);
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    history.pushState({}, "", newUrl);
+    reloadFoundPostings();
 }
 
 function initPage() {

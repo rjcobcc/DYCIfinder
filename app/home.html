@@ -15,6 +15,7 @@
         <button>I lost something</button>
     </div>
     <hr>
+    <h2>Unclaimed Lost Items</h2>
     <div>
         <span>Enter keyword:</span>
         <input type="text" id="keywordInput">
@@ -30,24 +31,25 @@
                 <option>Anywhere</option>
             </select>
         </div>
-        <button id="searchButton">Apply filters</button>
-    </div>
-    <div>
-        <p>results:</p>
         <span>
             <select id="sortOptions">
                 <option>Newest first</option>
                 <option>Oldest first</option>
             </select>
         </span>
+        <button id="searchButton">Apply filters</button>
+    </div>
+    <div>
+        <p>Results:</p>
     </div>
     <div id="foundPosts">
         <template id="foundPostTemplate">
             <div class="foundPost">
-                <h3 class="title">item with non descriptive title</h3>
-                <p class="location">location found: heaven</p>
-                <p class="date">date found: 2/12/1212</p>
-                <button class="claimButton">Post claim with proof of ownership</button>
+                <h3 class="title">Item Name</h3>
+                <p class="category">Category: Category123</p>
+                <p class="location">Found at: Location123</p>
+                <p class="date">Found on: 2026-04-10</p>
+                <button class="claimButton">Claim & Submit Proof</button>
             </div>
         </template>
     </div>
