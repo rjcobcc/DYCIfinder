@@ -24,6 +24,7 @@ CREATE TABLE found_reports (
     image_url VARCHAR(500),
     location_found VARCHAR(255),
     date_found DATE,
+    finder_name VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -54,7 +55,7 @@ CREATE TABLE item_claims (
     facebook_profile VARCHAR(255),
     contact_number VARCHAR(50),
     email_address VARCHAR(255),
-    additional_info TEXT,
+    additional_contact TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (found_item_id) REFERENCES found_reports(id)
         ON DELETE CASCADE
