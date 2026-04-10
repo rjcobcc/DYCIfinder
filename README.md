@@ -25,6 +25,8 @@ CREATE TABLE found_reports (
     location_found VARCHAR(255),
     date_found DATE,
     finder_name VARCHAR(255),
+    item_status VARCHAR(255),
+    claimant_name VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -43,6 +45,7 @@ CREATE TABLE lost_reports (
     image_url VARCHAR(500),
     location_lost VARCHAR(255),
     date_lost DATE,
+    report_status VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

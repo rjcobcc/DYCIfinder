@@ -2,9 +2,12 @@ import { API } from '../conf/api.js';
 
 document.getElementById("submitClaimButton").addEventListener("click",submitClaim);
 
+const params = new URLSearchParams(window.location.search);
+const item_id = params.get("item_id"); 
+
+loadItemDetails();
+
 async function submitClaim() {
-    const params = new URLSearchParams(window.location.search);
-    const item_id = params.get("item_id"); 
     const description = document.getElementById("claimDescription").value.trim();
     const name = document.getElementById("claimantName").value.trim();
     const fbProfile = document.getElementById("fbProfile").value.trim();
@@ -28,4 +31,19 @@ async function submitClaim() {
     if (response.success) {
         window.location.href = "home.html";
     }
+}
+
+async function loadItemDetails() {
+    const result = await fetch(API + '/get_found.php', {
+        method: "POST",
+        headers: {
+            "Content-Type":
+            "application/json"
+        },
+        body: JSON.stringify({
+            item_id
+        })
+    });
+    const response = await result.json();
+    console.log(response);
 }

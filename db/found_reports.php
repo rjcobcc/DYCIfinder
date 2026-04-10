@@ -1,6 +1,6 @@
 <?php
 function getFoundReports($conn, $filters, $page = 1) {
-    $limit = 10;
+    $limit = 9;
     $sql = "SELECT id, item_name, item_category, location_found, date_found FROM found_reports WHERE 1=1";
     $params = [];
     $types = "";
@@ -68,8 +68,8 @@ function insertFoundReport($conn, $data) {
     return $insertId;
 }
 
-function getFoundReportById($conn, $id) {
-    $sql = "SELECT id, item_name, item_category, location_found, date_found FROM found_reports WHERE id = ? LIMIT 1";
+function getFoundReport($conn, $id) {
+    $sql = "SELECT item_name, item_category, location_found, date_found FROM found_reports WHERE id = ? LIMIT 1";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $id);
     $stmt->execute();

@@ -2,18 +2,17 @@ import { API } from '../conf/api.js';
 
 document.getElementById("prevPageButton").addEventListener("click",prevPage);
 document.getElementById("nextPageButton").addEventListener("click",nextPage);
-document.getElementById("searchButton").addEventListener("click",searchFoundPostings);
+document.getElementById("searchButton").addEventListener("click",reloadFoundPostings);
+document.getElementById("foundSomethingButton").addEventListener("click",reportFoundItem);
 
 const orderSelection = document.getElementById("sortOptions");
 const foundPostTemplate = document.getElementById("foundPostTemplate");
 const foundPostsContainer = document.getElementById("foundPosts");
 
-initPage();
+let page = 1;
 reloadFoundPostings();
 
 async function reloadFoundPostings() {
-    const params = new URLSearchParams(window.location.search);
-    const page = params.get("page"); 
     const keyword = document.getElementById("keywordInput").value.trim();
     const category = document.getElementById("categorySelection").value;
     const location = document.getElementById("locationSelection").value;
@@ -62,44 +61,19 @@ function loadFoundPostings(data) {
     }
 }
 
-function searchFoundPostings() {
-    const params = new URLSearchParams(window.location.search);
-    params.set("page", 1);
-    const newUrl = `${window.location.pathname}?${params.toString()}`;
-    history.pushState({}, "", newUrl);
-    reloadFoundPostings();
-}
-
-function initPage() {
-    const params = new URLSearchParams(window.location.search);
-    if (!params.has("page")) {
-        params.set("page", "1");
-        const newUrl = `${window.location.pathname}?${params.toString()}`;
-        history.replaceState({}, "", newUrl);
-    }
+function reportFoundItem() {
+    window.location.href = "post_found.html"
 }
 
 async function prevPage() {
-    const params = new URLSearchParams(window.location.search);
-    const currentPage = parseInt(params.get("page") || "1", 10);
-    if (currentPage === 1) {
+    if (page === 1) {
         return;
     }
-    const newPage = currentPage - 1;
-
-    params.set("page", newPage);
-    const newUrl = `${window.location.pathname}?${params.toString()}`;
-    history.pushState({}, "", newUrl);
+    page -= 1;
     reloadFoundPostings();
 }
 
 async function nextPage() {
-    const params = new URLSearchParams(window.location.search);
-    const currentPage = parseInt(params.get("page") || "1", 10);
-    const newPage = currentPage + 1;
-
-    params.set("page", newPage);
-    const newUrl = `${window.location.pathname}?${params.toString()}`;
-    history.pushState({}, "", newUrl);
+    page += 1;
     reloadFoundPostings();
 }

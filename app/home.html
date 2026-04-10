@@ -4,63 +4,96 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DYCIfinder</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div>
-        <h1>DYCIfinder</h1>
-        <p>afahop fhouagf lorep ipsum</p>
-    </div>
-    <div>
-        <button>I found something</button>
-        <button>I lost something</button>
-    </div>
-    <hr>
-    <h2>Unclaimed Lost Items</h2>
-    <div>
-        <span>Enter keyword:</span>
-        <input type="text" id="keywordInput">
-        <div>
-            <span>Items that are:</span>
-            <select id="categorySelection">
-                <option>Any</option>
-            </select>
-        </div>
-        <div>
-            <span>Items found at:</span>
-            <select id="locationSelection">
-                <option>Anywhere</option>
-            </select>
-        </div>
-        <span>
-            <select id="sortOptions">
-                <option>Newest first</option>
-                <option>Oldest first</option>
-            </select>
-        </span>
-        <button id="searchButton">Apply filters</button>
-    </div>
-    <div>
-        <p>Results:</p>
-    </div>
-    <div id="foundPosts">
-        <template id="foundPostTemplate">
-            <div class="foundPost">
-                <h3 class="title">Item Name</h3>
-                <p class="category">Category: Category123</p>
-                <p class="location">Found at: Location123</p>
-                <p class="date">Found on: 2026-04-10</p>
-                <button class="claimButton">Claim & Submit Proof</button>
+
+    <!-- ── Hero / Header ── -->
+    <header class="hero">
+        <div class="container">
+            <div class="row align-items-center gy-4">
+                <div class="col-md-7">
+                    <h1>DYCIfinder</h1>
+                    <p class="mb-4">afahop fhouagf lorep ipsum</p>
+                </div>
+                <div class="col-md-5 d-flex gap-3 flex-wrap">
+                    <button id="foundSomethingButton" class="btn-found">I found something</button>
+                    <button class="btn-lost">I lost something</button>
+                </div>
             </div>
-        </template>
-    </div>
-    <br>
-    <div>
-        <button id="prevPageButton">prev</button>
-        <button id="nextPageButton">next</button>
-    </div>
-    <hr>
-    <button>admin</button>
-    
+        </div>
+    </header>
+
+    <!-- ── Lost Items Section ── -->
+    <section class="items-section">
+        <div class="container">
+            <h2 class="fw-bold mb-4" style="font-family:'Sora',sans-serif;">Unclaimed Lost Items</h2>
+
+            <!-- Filters -->
+            <div class="filter-card mb-4">
+                <div class="row g-3 align-items-end">
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <label for="keywordInput">Keyword</label>
+                        <input type="text" id="keywordInput" class="form-control" placeholder="Search items…">
+                    </div>
+                    <div class="col-6 col-sm-4 col-lg-2">
+                        <label for="categorySelection">Category</label>
+                        <select id="categorySelection" class="form-select">
+                            <option>Any</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-sm-4 col-lg-2">
+                        <label for="locationSelection">Location</label>
+                        <select id="locationSelection" class="form-select">
+                            <option>Anywhere</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-sm-4 col-lg-2">
+                        <label for="sortOptions">Sort by</label>
+                        <select id="sortOptions" class="form-select">
+                            <option>Newest first</option>
+                            <option>Oldest first</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-sm-auto col-lg-auto">
+                        <button id="searchButton" class="w-100">Apply filters</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <p class="results-label mb-3">Results</p>
+            <div id="foundPosts" class="row g-3">
+                <template id="foundPostTemplate">
+                    <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="foundPost">
+                            <h3 class="title">Item Name</h3>
+                            <p class="category">Category: Category123</p>
+                            <p class="location">Found at: Location123</p>
+                            <p class="date">Found on: 2026-04-10</p>
+                            <button class="claimButton">Claim &amp; Submit Proof</button>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Pagination -->
+            <div class="d-flex gap-2 mt-4">
+                <button id="prevPageButton">← Prev</button>
+                <button id="nextPageButton">Next →</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Footer / Admin ── -->
+    <footer class="border-top py-3">
+        <div class="container d-flex justify-content-end">
+            <button class="admin-btn">admin</button>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="js/home.js"></script>
 </body>
 </html>
