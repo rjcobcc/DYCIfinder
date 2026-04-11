@@ -1,4 +1,5 @@
 import { API } from '../conf/api.js';
+import { showOKPopup } from './popup.js';
 
 document.getElementById("submitClaimButton").addEventListener("click",submitClaim);
 
@@ -28,9 +29,8 @@ async function submitClaim() {
     const response = await result.json();
     console.log(response);
 
-    if (response.success) {
-        window.location.href = "home.html";
-    }
+    await showOKPopup("Claim successfully submitted!<br>We will contact you through your given contact information.");
+    window.location.href = "home.html";
 }
 
 async function loadItemDetails() {
@@ -45,5 +45,11 @@ async function loadItemDetails() {
         })
     });
     const response = await result.json();
-    console.log(response);
+    const data = response.data;
+    console.log(data);
+
+    document.getElementById("itemName").textContent = "Item for Claim: " + data['item_name'];
+    document.getElementById("itemCategory").textContent = "Category: " + data['item_category'];
+    document.getElementById("itemFoundLocation").textContent = "Found at: " + data['location_found'];
+    document.getElementById("itemFoundDate").textContent = "Found on: " + data['date_found'];
 }
