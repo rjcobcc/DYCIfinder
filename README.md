@@ -22,7 +22,7 @@
 1. find match between found item reports and (claims made to them OR general lost item reports)
 2. finds a (claim OR lost item report) matching a found item report
 3. privated and marks the found item post with the (claim OR lost item report)
-4. contact the claim poster or lost item poster outside the website
+4. contact the claim poster or lost item poster (through their given contact info)
 5. item will be claimed at the office:
     1. wrong owner: undo step 3 and go back to step 1
     2. right owner: archive the resolved found item post
