@@ -13,7 +13,7 @@
 ### losters' process
 1. losts an item
 2. visit the site
-3. reporting lost item (with contact info, detailed item description, and images for proof):
+3. reporting lost item (only visible to office)(with contact info, detailed item description, and images for proof):
     1. submit a claim to a posted found item report
     2. submit a general lost item report
 4. wait for office to contact them
