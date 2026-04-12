@@ -23,7 +23,7 @@ export function showOKPopup(message = "OK") {
 
         <div class="d-flex justify-content-center">
           <button class="btn btn-primary btn-sm" id="dyci-ok">
-            OK
+            <b>OK</b>
           </button>
         </div>
       </div>

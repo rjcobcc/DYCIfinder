@@ -10,9 +10,17 @@ const foundPostTemplate = document.getElementById("foundPostTemplate");
 const foundPostsContainer = document.getElementById("foundPosts");
 
 let page = 1;
+let loadingFoundPostings = false;
+
 reloadFoundPostings();
 
 async function reloadFoundPostings() {
+    if (loadingFoundPostings) {
+        console.log("still processing last request");
+        return;
+    } 
+    loadingFoundPostings = true;
+
     const keyword = document.getElementById("keywordInput").value.trim();
     const category = document.getElementById("categorySelection").value;
     const location = document.getElementById("locationSelection").value;
@@ -34,19 +42,12 @@ async function reloadFoundPostings() {
     const data = response.data;
     console.log(data);
 
-    clearFoundPostings();
-    loadFoundPostings(data);
-}
-
-function clearFoundPostings() {
     Array.from(foundPostsContainer.children).forEach(child => {
         if (child.tagName !== "TEMPLATE") {
             child.remove();
         }
     });
-}
 
-function loadFoundPostings(data) {
     for (let i = 0; i < data.length; i++) {
         let post = data[i];
         const clone = foundPostTemplate.content.cloneNode(true);
@@ -59,6 +60,8 @@ function loadFoundPostings(data) {
         });
         foundPostsContainer.appendChild(clone);
     }
+    
+    loadingFoundPostings = false;
 }
 
 function reportFoundItem() {

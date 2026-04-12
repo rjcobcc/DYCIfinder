@@ -31,30 +31,39 @@
                     <!-- Claim Form -->
                     <div class="form-card">
                         <div class="mb-3">
+                            <label for="claimantName">Claimant Name</label>
+                            <input type="text" id="claimantName" class="form-control" placeholder="Lastname, Firstname Middleinitial.">
+                        </div>
+                        <div class="mb-3">
+                            <label for="fbProfile">Facebook Profile</label>
+                            <input type="url" id="fbProfile" class="form-control" placeholder="https://facebook.com/yourprofile">
+                        </div>
+                        <div class="mb-3">
                             <label for="claimDescription">Item Description for Proof</label>
                             <textarea id="claimDescription" class="form-control" rows="4" placeholder="Describe the item in detail to verify ownership…"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="claimantName">Claimant Name</label>
-                            <input type="text" id="claimantName" class="form-control">
+                            <label for="image1">Photo Proof 1<span class="optional-badge">Optional</span></label>
+                            <input type="file" accept="image/*" id="image1" class="form-control">
+                            <img id="preview1" style="margin-top:10px; max-width:100%; display:none;" />
                         </div>
                         <div class="mb-3">
-                            <label for="contactno">Contact Number</label>
-                            <input type="text" id="contactno" class="form-control">
+                            <label for="image2">Photo Proof 2<span class="optional-badge">Optional</span></label>
+                            <input type="file" accept="image/*" id="image2" class="form-control">
+                            <img id="preview2" style="margin-top:10px; max-width:100%; display:none;" />
                         </div>
                         <div class="mb-3">
-                            <label for="fbProfile">Facebook Profile <span class="optional-badge">Optional</span></label>
-                            <input type="text" id="fbProfile" class="form-control" placeholder="https://facebook.com/yourprofile">
+                            <label for="contactno">Contact Number <span class="optional-badge">Optional</span></label>
+                            <input type="text" id="contactno" class="form-control" placeholder="09xxxxxxxxx">
                         </div>
                         <div class="mb-3">
                             <label for="email">Email Address <span class="optional-badge">Optional</span></label>
-                            <input type="text" id="email" class="form-control" placeholder="you@example.com">
+                            <input type="email" id="email" class="form-control" placeholder="you@example.com">
                         </div>
                         <div class="mb-4">
                             <label for="contactinfo">Additional Contact Info <span class="optional-badge">Optional</span></label>
                             <textarea id="contactinfo" class="form-control" rows="3" placeholder="Any other way we can reach you…"></textarea>
                         </div>
-
                         <div class="d-grid">
                             <button id="submitClaimButton">Submit Claim</button>
                         </div>
@@ -64,7 +73,6 @@
             </div>
         </div>
     </main>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="js/post_claim.js"></script>
 </body>
