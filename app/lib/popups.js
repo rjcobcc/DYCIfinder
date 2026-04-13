@@ -1,32 +1,45 @@
-export function showOKPopup(message = "OK") {
+export function showOKPopup(message = "...") {
   return new Promise((resolve) => {
-
-    // Remove existing popup
     const existing = document.getElementById("dyci-popup");
     if (existing) existing.remove();
 
-    // Overlay
     const overlay = document.createElement("div");
     overlay.id = "dyci-popup";
-    overlay.className = "position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center";
-    overlay.style = "background: rgba(0,0,0,.4); z-index: 9999;";
+    overlay.style = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    `;
 
-    // Popup
     const popup = document.createElement("div");
-    popup.className = "form-card";
-    popup.style.maxWidth = "400px";
-    popup.style.width = "90%";
-
+    popup.style = `
+      background: #fff;
+      padding: 20px;
+      border-radius: 6px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    `;
     popup.innerHTML = `
-      <div class="d-flex flex-column text-center">
-        <p class="mb-3">${message}</p>
-
-        <div class="d-flex justify-content-center">
-          <button class="btn btn-primary btn-sm" id="dyci-ok">
-            <b>OK</b>
-          </button>
-        </div>
-      </div>
+      <p style="margin-bottom: 15px;">${message}</p>
+      <button id="dyci-ok" style="
+        padding: 6px 14px;
+        border: none;
+        background: #007bff;
+        color: #fff;
+        border-radius: 4px;
+        cursor: pointer;
+      ">
+        OK
+      </button>
     `;
 
     overlay.appendChild(popup);
@@ -34,7 +47,7 @@ export function showOKPopup(message = "OK") {
 
     function close() {
       overlay.remove();
-      resolve(); // 👈 THIS makes it "wait"
+      resolve();
     }
 
     popup.querySelector("#dyci-ok").onclick = close;

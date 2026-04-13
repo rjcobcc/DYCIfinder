@@ -1,11 +1,11 @@
 <?php
 function getFoundReports($conn, $filters, $page = 1) {
     $limit = 9;
-    $sql = "SELECT id, item_name, item_category, location_found, date_found FROM found_reports WHERE 1=1";
+    $sql = "SELECT id, item_name, item_category, find_location, find_date FROM found_reports WHERE 1=1";
     $params = [];
     $types = "";
     if (!empty($filters['keyword'])) {
-        $sql .= " AND (item_name LIKE ? OR description LIKE ?)";
+        $sql .= " AND (item_name LIKE ? OR item_category LIKE ?)";
         $keyword = "%" . $filters['keyword'] . "%";
         $params[] = $keyword;
         $params[] = $keyword;
@@ -17,7 +17,7 @@ function getFoundReports($conn, $filters, $page = 1) {
         $types .= "s";
     }
     if (!empty($filters['location']) && $filters['location'] !== 'Anywhere') {
-        $sql .= " AND location_found = ?";
+        $sql .= " AND find_location = ?";
         $params[] = $filters['location'];
         $types .= "s";
     }
@@ -26,10 +26,10 @@ function getFoundReports($conn, $filters, $page = 1) {
     $offset = ($page - 1) * $limit;
 
     if ($filters['order'] == 'Oldest first') {
-        $sql .= " ORDER BY date_found ASC LIMIT ? OFFSET ?"; 
+        $sql .= " ORDER BY find_date ASC LIMIT ? OFFSET ?"; 
     }
     else {
-        $sql .= " ORDER BY date_found DESC LIMIT ? OFFSET ?";
+        $sql .= " ORDER BY find_date DESC LIMIT ? OFFSET ?";
     }
 
     $params[] = $limit;
@@ -47,18 +47,32 @@ function getFoundReports($conn, $filters, $page = 1) {
     return $data;
 }
 
-function insertFoundReport($conn, $data) {
+function insertFoundReport(
+    $conn,
+    $finder_name,
+    $item_name,
+    $item_category,
+    $item_description,
+    $find_location,
+    $find_date,
+    $image_url1,
+    $image_url2
+) {
     $sql = "INSERT INTO found_reports 
-        (item_name, item_category, description, location_found, date_found) 
-        VALUES (?, ?, ?, ?, ?)";
+        (item_name, item_category, item_description, find_location, find_date, image_url1, image_url2, finder_name) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
     $stmt = $conn->prepare($sql);
     $stmt->bind_param(
-        "sssss",
-        $data['item_name'],
-        $data['item_category'],
-        $data['description'],
-        $data['location_found'],
-        $data['date_found']
+        "ssssssss",
+        $item_name,
+        $item_category,
+        $item_description,
+        $find_location,
+        $find_date,
+        $image_url1,
+        $image_url2,
+        $finder_name
     );
 
     $stmt->execute();
@@ -69,7 +83,7 @@ function insertFoundReport($conn, $data) {
 }
 
 function getFoundReport($conn, $id) {
-    $sql = "SELECT item_name, item_category, location_found, date_found FROM found_reports WHERE id = ? LIMIT 1";
+    $sql = "SELECT item_name, item_category, find_location, find_date FROM found_reports WHERE id = ? LIMIT 1";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $id);
     $stmt->execute();

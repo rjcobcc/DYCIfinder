@@ -15,7 +15,6 @@ function uploadAndGetImageURL($imagePath) {
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
     $response = curl_exec($ch);
-    curl_close($ch);
 
     $result = json_decode($response, true);
     return $result['data']['url'] ?? null;

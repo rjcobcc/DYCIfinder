@@ -26,11 +26,12 @@
 5. item will be claimed at the office. if wrong owner, undo step 3 and go back to step 1
 
 ### user features
-
+- registered users can track their claims and reports
+- email signup verification and notifications
 
 ### admin features
-
-
+- 
+-
 
 # DATABASE
 
@@ -55,8 +56,8 @@ CREATE TABLE found_reports (
     item_category VARCHAR(32),
     item_description TEXT,
 
-    location_found VARCHAR(32),
-    datetime_found TIMESTAMP,
+    find_location VARCHAR(32),
+    find_date DATE,
     
     image_url1 VARCHAR(512),
     image_url2 VARCHAR(512),
@@ -77,8 +78,8 @@ CREATE TABLE lost_reports (
     item_category VARCHAR(32),
     item_description TEXT,
 
-    location_found VARCHAR(32),
-    datetime_found TIMESTAMP,
+    lost_location VARCHAR(32),
+    lost_date DATE,
     
     image_url1 VARCHAR(512),
     image_url2 VARCHAR(512),
@@ -86,7 +87,7 @@ CREATE TABLE lost_reports (
     loster_name VARCHAR(64),
     facebook_profile VARCHAR(256),
     contact_number VARCHAR(16),
-    email_address VARCHAR(32)
+    email_address VARCHAR(32),
 
     report_status VARCHAR(16),
 
@@ -104,7 +105,7 @@ CREATE TABLE item_claims (
     claimant_name VARCHAR(64),
     facebook_profile VARCHAR(256),
     contact_number VARCHAR(16),
-    email_address VARCHAR(32)
+    email_address VARCHAR(32),
 
     claim_status VARCHAR(16),
 
@@ -114,4 +115,47 @@ CREATE TABLE item_claims (
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
+```
+
+## SAMPLE ROWS
+
+```sql
+INSERT INTO campus_locations (location_name) VALUES
+('Main Campus'),
+('North Campus'),
+('South Campus'),
+('East Campus'),
+('West Campus'),
+('Library Building'),
+('Science Building'),
+('Engineering Building'),
+('Administration Building'),
+('Student Center'),
+('Sports Complex'),
+('Dormitory A'),
+('Dormitory B'),
+('Cafeteria'),
+('Parking Area');
+
+INSERT INTO item_categories (category_name) VALUES
+('ID Card'),
+('Access Card'),
+('Student Uniform'),
+('Keys'),
+('Wallet/Purse'),
+('Mobile Phone'),
+('Laptop'),
+('Tablet'),
+('Earphones/Headphones'),
+('Books'),
+('Notebooks'),
+('Pens & Stationery'),
+('Backpack/Bag'),
+('Water Bottle'),
+('Umbrella'),
+('Jacket/Hoodie'),
+('Charger/Charging Cable'),
+('USB Drive'),
+('Eyeglasses'),
+('Sports Gear');
 ```

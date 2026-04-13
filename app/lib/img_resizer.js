@@ -1,17 +1,25 @@
-export async function resizeImage(file, maxWidth, maxHeight, quality = 0.8) {
+export async function resizeImage(file) {
   return new Promise((resolve, reject) => {
+    const maxWidth = 1024;
+    const maxHeight = 1024;
+    const quality = 0.7;
+
     const reader = new FileReader();
     reader.readAsDataURL(file);
+
     reader.onload = (event) => {
       const img = new Image();
       img.src = event.target.result;
-      
+
       img.onload = () => {
-        const canvas = document.createElement('canvas');
         let width = img.width;
         let height = img.height;
 
-        // Maintain Aspect Ratio
+        if (width <= maxWidth && height <= maxHeight) {
+          resolve(file);
+          return;
+        }
+
         if (width > height) {
           if (width > maxWidth) {
             height *= maxWidth / width;
@@ -24,21 +32,27 @@ export async function resizeImage(file, maxWidth, maxHeight, quality = 0.8) {
           }
         }
 
+        const canvas = document.createElement('canvas');
         canvas.width = width;
         canvas.height = height;
+
         const ctx = canvas.getContext('2d');
-        
-        // Draw image onto the canvas
         ctx.drawImage(img, 0, 0, width, height);
 
-        // Export as JPEG Blob (Change 'image/jpeg' to 'image/webp' if preferred)
+        const mimeType = 'image/jpeg';
+
         canvas.toBlob((blob) => {
+          if (!blob) {
+            reject(new Error("Canvas conversion failed"));
+            return;
+          }
           resolve(blob);
-        }, 'image/jpeg', quality);
+        }, mimeType, quality);
       };
-      
+
       img.onerror = reject;
     };
+
     reader.onerror = reject;
   });
 }
