@@ -1,3 +1,3 @@
 <?php
-define('IMAGES_HOST_KEY','')
-?>
+
+define('IMAGES_HOST_KEY','');

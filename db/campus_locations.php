@@ -1,5 +1,6 @@
 <?php
-function getCampusLocations($conn) {
+
+function getCampusLocationNames($conn) {
     $sql = "SELECT location_name FROM campus_locations";
     $result = $conn->query($sql);
     $rows = [];
@@ -10,4 +11,3 @@ function getCampusLocations($conn) {
     }
     return $rows;
 }
-?>

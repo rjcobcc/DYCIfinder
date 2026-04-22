@@ -1,61 +1,71 @@
 <?php
+
 header("Content-Type: application/json");
 
 require_once __DIR__ . '/../conf/db.php';
 require_once __DIR__ . '/../db/lost_reports.php';
 require_once __DIR__ . '/../lib/img_host.php';
 
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+try {
+    $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
-$item = $_POST['item'] ?? '';
-$category = $_POST['category'] ?? '';
-$description = $_POST['description'] ?? '';
-$location = $_POST['location'] ?? '';
-$date = $_POST['date'] ?? '';
-$loster = $_POST['loster'] ?? '';
-$facebook = $_POST['facebook'] ?? '';
-$contact = $_POST['contact'] ?? '';
-$email = $_POST['email'] ?? '';
-$status = $_POST['status'] ?? '';
-$userID = null;
+    $description = $_POST['description'];
+    $category = $_POST['category'];
+    $location = $_POST['location'];
+    $facebook = $_POST['facebook'];
+    $contact = $_POST['contact'];
+    $loster = $_POST['loster'];
+    $status = $_POST['status'];
+    $email = $_POST['email'];
+    $date = $_POST['date'];
+    $item = $_POST['item'];
+    $image1URL = null;
+    $image2URL = null;
+    $userID = null;
 
-$image1URL = null;
-$image2URL = null;
+    // Convert image uploads to URLs with free image hosting
+    $tmpDir = sys_get_temp_dir();                                                   // Get the system temporary directory
+    if (isset($_FILES['image1']) && $_FILES['image1']['error'] === UPLOAD_ERR_OK) { // Check if image1 is uploaded without errors
+        $tmp1 = $tmpDir . "/" . uniqid("img1_") . "_" . $_FILES['image1']['name'];  // Create a unique temporary file path
+        move_uploaded_file($_FILES['image1']['tmp_name'], $tmp1);                   // Move the uploaded file to the temporary location
+        $image1URL = uploadAndGetImageURL($tmp1);                                   // Upload the image and get its URL
+        unlink($tmp1);                                                              // Delete the temporary file path
+    }
+    if (isset($_FILES['image2']) && $_FILES['image2']['error'] === UPLOAD_ERR_OK) {
+        $tmp2 = $tmpDir . "/" . uniqid("img2_") . "_" . $_FILES['image2']['name'];
+        move_uploaded_file($_FILES['image2']['tmp_name'], $tmp2);
+        $image2URL = uploadAndGetImageURL($tmp2);
+        unlink($tmp2);
+    }
+    if (isset($_SESSION['userID'])) $userID = $_SESSION['userID'];
 
-$tmpDir = sys_get_temp_dir();
+    $output = insertLostReport(
+        $conn,
+        $userID,
+        $item,
+        $category,
+        $description,
+        $location,
+        $date,
+        $image1URL,
+        $image2URL,
+        $loster,
+        $facebook,
+        $contact,
+        $email
+    );
 
-if (isset($_FILES['image1']) && $_FILES['image1']['error'] === UPLOAD_ERR_OK) {
-    $tmp1 = $tmpDir . "/" . uniqid("img1_") . "_" . $_FILES['image1']['name'];
-    move_uploaded_file($_FILES['image1']['tmp_name'], $tmp1);
-    $image1URL = uploadAndGetImageURL($tmp1);
-    unlink($tmp1);
+    echo json_encode([
+        "success" => true,
+        "redirect" => null,
+        "lost_report_id" => $output
+    ]);
 }
-
-if (isset($_FILES['image2']) && $_FILES['image2']['error'] === UPLOAD_ERR_OK) {
-    $tmp2 = $tmpDir . "/" . uniqid("img2_") . "_" . $_FILES['image2']['name'];
-    move_uploaded_file($_FILES['image2']['tmp_name'], $tmp2);
-    $image2URL = uploadAndGetImageURL($tmp2);
-    unlink($tmp2);
+catch (Exception $e) {
+    error_log("Error post_lost.php : " . $e->getMessage());
+    echo json_encode([
+        "success" => false,
+        "redirect" => null,
+        "lost_report_id" => 0
+    ]);
 }
-
-if (isset($_SESSION['userID'])) {
-    $userID = $_SESSION['userID'];
-}
-
-$output = insertLostReport(
-    $conn,
-    $userID,
-    $item,
-    $category,
-    $description,
-    $location,
-    $date,
-    $image1URL,
-    $image2URL,
-    $loster,
-    $facebook,
-    $contact,
-    $email
-);
-
-echo json_encode(["lost_report_id" => $output]); // 0 if failed, otherwise the new report ID

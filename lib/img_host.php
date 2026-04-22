@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/../conf/keys.php';
 
 function uploadAndGetImageURL($imagePath) {
@@ -19,4 +20,3 @@ function uploadAndGetImageURL($imagePath) {
     $result = json_decode($response, true);
     return $result['data']['url'] ?? null;
 }
-?>

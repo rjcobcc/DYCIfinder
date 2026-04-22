@@ -11,6 +11,8 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("remove2").addEventListener("click", function () { clearImage("image2", "preview2", "remove2"); });
 });
 
+
+
 let postingFoundItemReport = false;
 
 loadSelectOptions("category", "get_item_categories.php", "category_name");
@@ -38,6 +40,7 @@ async function postFoundItemReport() {
     if (!location) { showOKPopup("Find Location is required."); postingFoundItemReport = false; return; }
     if (!date) { showOKPopup("Find Date is required."); postingFoundItemReport = false; return; }
 
+    // prepare form data
     const formData = new FormData();
     formData.append("finder", finder);
     formData.append("item", item);
@@ -54,6 +57,7 @@ async function postFoundItemReport() {
         formData.append("image1", resized2);
     }
 
+    // submit form data
     const result = await fetch(API + "/post_found.php", {
         method: "POST",
         body: formData
@@ -61,8 +65,14 @@ async function postFoundItemReport() {
     const response = await result.json();
     console.log(response);
 
-    await showOKPopup("Thank you! Please drop off the item at the office to proceed.<br><br>Your report's ID is: " + response.found_report_id);
-    window.location.href = "home.html";
+    if (response.success) {
+        await showOKPopup("Thank you! Please drop off the item at the office to proceed.<br><br>Your report's ID is: " + response.found_report_id);
+        window.location.href = "search.html";
+    }
+    else {
+        await showOKPopup("An error occurred.<br><br>Please try again.");
+        postingFoundItemReport = false;
+    }
 }
 
 

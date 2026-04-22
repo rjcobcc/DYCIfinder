@@ -1,7 +1,5 @@
 <?php
 
-
-
 function getPublicFoundReports($conn, $page, $keyword, $category, $location, $order) {
     $limit = 9;
     $sql = "SELECT id, item_name, item_category, find_location, find_date FROM found_reports WHERE report_status = 'public'";
@@ -101,4 +99,3 @@ function getPublicFoundReport($conn, $id) {
     $stmt->close();
     return $report;
 }
-?>

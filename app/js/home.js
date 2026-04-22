@@ -1,4 +1,5 @@
 import { API } from '../conf/api.js';
+import { showOKPopup } from '../lib/popups.js';
 import { loadSelectOptions } from '../lib/util.js';
 
 document.getElementById("prevPageButton").addEventListener("click",prevPage);
@@ -6,6 +7,8 @@ document.getElementById("nextPageButton").addEventListener("click",nextPage);
 document.getElementById("searchButton").addEventListener("click",reloadFoundPostings);
 
 const pageNumber = document.getElementById("pageNumber");
+
+
 
 let page = 1;
 let lastPage = false;
@@ -27,6 +30,7 @@ async function reloadFoundPostings() {
     const keyword = document.getElementById("keywordInput").value.trim();
     const category = document.getElementById("categorySelection").value;
     const location = document.getElementById("locationSelection").value;
+    const resultCount = document.getElementById("resultCount");
 
     const result = await fetch(API + '/get_founds.php', {
         method: "POST",
@@ -39,20 +43,26 @@ async function reloadFoundPostings() {
         })
     });
     const response = await result.json();
+    console.log(response);
+
+    if (!response.success) {
+        showOKPopup("Failed to load results.");
+        loadingFoundPostings = false;
+        return;
+    }
+
     const data = response.data;
-    console.log(data);
 
     if (data.length < 9) lastPage = true;
     else lastPage = false;
 
-    // clear old results
     Array.from(foundPostsContainer.children).forEach(child => {
         if (child.tagName !== "TEMPLATE") {
             child.remove();
         }
     });
 
-    // load new results
+    resultCount.textContent = response.data.length;
     for (let i = 0; i < data.length; i++) {
         let post = data[i];
         const clone = foundPostTemplate.content.cloneNode(true);

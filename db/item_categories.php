@@ -1,5 +1,6 @@
 <?php
-function getItemCategories($conn) {
+
+function getItemCategoryNames($conn) {
     $sql = "SELECT category_name FROM item_categories";
     $result = $conn->query($sql);
     $rows = [];
@@ -10,4 +11,3 @@ function getItemCategories($conn) {
     }
     return $rows;
 }
-?>

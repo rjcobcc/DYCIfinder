@@ -1,11 +1,23 @@
 <?php
+
 header("Content-Type: application/json");
 
 require_once __DIR__ . '/../conf/db.php';
 require_once __DIR__ . '/../db/item_categories.php';
 
-$conn = new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
-$output = getItemCategories($conn);
+try {
+    $conn = new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
+    $output = getItemCategoryNames($conn);
 
-echo json_encode(["data" => $output]);
-?>
+    echo json_encode([
+        "success" => true,
+        "data" => $output
+    ]);
+}
+catch (Exception $e) {
+    error_log("Error get_item_categories.php : " . $e->getMessage());
+    echo json_encode([
+        "success" => false,
+        "data" => []
+    ]);
+}
