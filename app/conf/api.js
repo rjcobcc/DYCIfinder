@@ -1,2 +1,2 @@
 const PROJECT_LINK = "http://localhost/DYCIfinder"; 
-export const API = PROJECT_LINK + "/api";
+export const API = PROJECT_LINK + "/server/api";

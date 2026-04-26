@@ -1,38 +1,3 @@
-# USERS' SYSTEM PROCESS
-
-### finders' process
-1. finds an item
-2. visit the site
-3. post the item found with all the details and images (only visible to office for now)
-4. instructed to bring the item to office
-
-### admin managing finder posts
-1. view submitted found item report
-2. publicize found item report (after being received and report details are verified)
-
-### losters' process
-1. losts an item
-2. visit the site
-3. reporting lost item (only visible to office)(with contact info, detailed item description, and images for proof):
-    1. submit a claim to a posted found item report
-    2. submit a general lost item report
-4. wait for office to contact them
-
-### admin managing loster posts
-1. find match between found item reports and (claims made to them OR general lost item reports)
-2. finds a (claim OR lost item report) matching a found item report
-3. archive and marks the found item post with the (claim OR lost item report)
-4. contact the claim poster or lost item poster (through their given contact info)
-5. item will be claimed at the office. if wrong owner, undo step 3 and go back to step 1
-
-### user features
-- registered users can track their claims and reports
-- email signup verification and notifications
-
-### admin features
-- 
--
-
 # DATABASE
 
 ```sql
@@ -53,7 +18,7 @@ CREATE TABLE item_categories (
 
 CREATE TABLE found_reports (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT, -- reporter's id, null if not registered user
+    user_id INT, -- reporter's id, null if not a registered user
 
     item_name VARCHAR(16),
     item_category VARCHAR(32),
@@ -76,7 +41,7 @@ CREATE TABLE found_reports (
 
 CREATE TABLE lost_reports (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
+    user_id INT, -- reporter's id, null if not a registered user
 
     item_name VARCHAR(16),
     item_category VARCHAR(32),
@@ -100,7 +65,7 @@ CREATE TABLE lost_reports (
 
 CREATE TABLE item_claims (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
+    user_id INT,  -- claimant's id, null if not a registered user
     found_item_id INT NOT NULL,
 
     claim_description TEXT,
@@ -122,7 +87,7 @@ CREATE TABLE item_claims (
 );
 ```
 
-## SAMPLE ROWS
+# SAMPLE DATA
 
 ```sql
 INSERT INTO campus_locations (location_name) VALUES
