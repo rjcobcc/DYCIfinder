@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/popups.css">
+    <title>DYCIfinder</title>
+</head>
+<body>
+    <header>
+        <h1>DYCIfinder</h1>
+        <button>Profile</button>
+        <button>Notifications</button>
+        <button onclick="window.location.href='report_found.html'">I found something</button>
+        <button onclick="window.location.href='report_lost.html'">I lost something</button>
+    </header>
+    <hr>
+    <main>
+        <h2>Unclaimed Items</h2>
+
+        <div id="filters-container">
+
+            <label>Keyword</label>
+            <input type="text" id="keyword-input">
+
+            <label>Category</label>
+            <select id="category-selection">
+                <option>Any</option>
+            </select>
+
+            <label>Location</label>
+            <select id="location-selection">
+                <option>Anywhere</option>
+            </select>
+
+            <label>Sort by</label>
+            <select id="sort-options">
+                <option>Newest first</option>
+                <option>Oldest first</option>
+            </select>
+
+            <button id="apply-filters-btn">Apply</button>
+        </div>
+
+        <p>Results: <span id="results-count"></span></p>
+
+        <div id="foundposts-container">
+            <template id="foundpost-template">
+                <div class="found-post">
+                    <h3 class="foundpost-name">Item Name</h3>
+                    <p>Category: 
+                        <span class="foundpost-category">Category123</span>
+                    </p>
+                    <p>Found at: 
+                        <span class="foundpost-location">Location123</span>
+                    </p>
+                    <p>Found on: 
+                        <span class="foundpost-date">2026-04-10</span>
+                    </p>
+                    <button class="claim-foundpost-btn">Submit Claim&Proof</button>
+                </div>
+            </template>
+        </div>
+
+        <br>
+
+        <div id="pagenav-container">
+            <button id="prev-pagebtn">Prev</button>
+            <span>Page <span id="current-page">1</span></span>
+            <button id="next-pagebtn">Next</button>
+        </div>
+    </main>
+
+    <script type="module" src="js/search_found.js"></script>
+</body>
+</html>

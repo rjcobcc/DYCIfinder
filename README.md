@@ -27,12 +27,11 @@ CREATE TABLE found_reports (
     find_location VARCHAR(32),
     find_date DATE,
     
-    image_url1 VARCHAR(512),
-    image_url2 VARCHAR(512),
+    image_url VARCHAR(512),
 
     finder_name VARCHAR(64),
 
-    report_status VARCHAR(16) DEFAULT 'Pending',
+    report_status VARCHAR(16) DEFAULT 'Pending', -- Pending -> Public -> Claimed
     claimant_post_type VARCHAR(8), -- claimant/owner's post type (claim post or lost report)
     claimant_post_id INT, -- claimant/owner's post id
 
@@ -58,7 +57,7 @@ CREATE TABLE lost_reports (
     contact_number VARCHAR(16),
     email_address VARCHAR(32),
 
-    report_status VARCHAR(16)  DEFAULT 'Unresolved',
+    report_status VARCHAR(16)  DEFAULT 'Unresolved', -- Unresolved -> Resolved / Expired
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

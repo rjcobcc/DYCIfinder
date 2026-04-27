@@ -1,6 +1,6 @@
 <?php
 
-function getItemCategoryNames($conn) {
+function get_itemcategory_names($conn) { // returns [] or [['category_name' => string], ...]
     $sql = "SELECT category_name FROM item_categories";
     $result = $conn->query($sql);
     $rows = [];

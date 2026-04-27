@@ -1,4 +1,5 @@
-export async function resizeImage(file) {
+
+export async function getResizedImage(file) { // returns input image file as blob, throws an error if failed
   return new Promise((resolve, reject) => {
     const maxWidth = 1024;
     const maxHeight = 1024;
@@ -14,11 +15,6 @@ export async function resizeImage(file) {
       img.onload = () => {
         let width = img.width;
         let height = img.height;
-
-        if (width <= maxWidth && height <= maxHeight) {
-          resolve(file);
-          return;
-        }
 
         if (width > height) {
           if (width > maxWidth) {
@@ -39,15 +35,9 @@ export async function resizeImage(file) {
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
 
-        const mimeType = 'image/jpeg';
-
         canvas.toBlob((blob) => {
-          if (!blob) {
-            reject(new Error("Canvas conversion failed"));
-            return;
-          }
           resolve(blob);
-        }, mimeType, quality);
+        }, 'image/jpeg', quality);
       };
 
       img.onerror = reject;

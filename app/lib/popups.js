@@ -1,59 +1,87 @@
-export function showOKPopup(message = "...") {
-  return new Promise((resolve) => {
-    const existing = document.getElementById("dyci-popup");
-    if (existing) existing.remove();
+let popupsLoaded = false
+let activePopup = null
+let activeResolve = null
 
-    const overlay = document.createElement("div");
-    overlay.id = "dyci-popup";
-    overlay.style = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-    `;
-
-    const popup = document.createElement("div");
-    popup.style = `
-      background: #fff;
-      padding: 20px;
-      border-radius: 6px;
-      max-width: 400px;
-      width: 90%;
-      text-align: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    `;
-    popup.innerHTML = `
-      <p style="margin-bottom: 15px;">${message}</p>
-      <button id="dyci-ok" style="
-        padding: 6px 14px;
-        border: none;
-        background: #007bff;
-        color: #fff;
-        border-radius: 4px;
-        cursor: pointer;
-      ">
-        OK
-      </button>
-    `;
-
-    overlay.appendChild(popup);
-    document.body.appendChild(overlay);
-
-    function close() {
-      overlay.remove();
-      resolve();
+function clearActive(result = null) {
+    if (activePopup) {
+        activePopup.remove()
+        activePopup = null
     }
+    if (activeResolve) {
+        activeResolve(result)
+        activeResolve = null
+    }
+}
 
-    popup.querySelector("#dyci-ok").onclick = close;
 
-    overlay.onclick = (e) => {
-      if (e.target === overlay) close();
-    };
-  });
+
+async function loadPopups() {
+    if (popupsLoaded) return
+
+    const res = await fetch("./assets/popups.html")
+    const html = await res.text()
+
+    document.body.insertAdjacentHTML("beforeend", html)
+
+    popupsLoaded = true
+}
+
+
+
+export async function popupMessage(content = "...") {
+    await loadPopups()
+
+    clearActive()
+
+    return new Promise((resolve) => {
+        const tpl = document.getElementById("popup-message")
+        const node = tpl.content.cloneNode(true)
+
+        const container = node.querySelector(".popup-container")
+        const ok = node.querySelector(".popup-confirm")
+
+        node.querySelector(".popup-content-container").innerHTML = content
+
+        activePopup = container
+        activeResolve = resolve
+
+        ok.onclick = () => {
+            clearActive(true)
+        }
+
+        document.body.appendChild(node)
+    })
+}
+
+
+
+export async function popupConfirm(content = "...") {
+    await loadPopups()
+
+    clearActive(false)
+
+    return new Promise((resolve) => {
+        const tpl = document.getElementById("popup-confirm")
+        const node = tpl.content.cloneNode(true)
+
+        const container = node.querySelector(".popup-container")
+        const text = node.querySelector(".popup-content-container")
+        const ok = node.querySelector(".popup-confirm")
+        const cancel = node.querySelector(".popup-cancel")
+
+        text.innerHTML = content
+
+        activePopup = container
+        activeResolve = resolve
+
+        ok.onclick = () => {
+            clearActive(true)
+        }
+
+        cancel.onclick = () => {
+            clearActive(false)
+        }
+
+        document.body.appendChild(node)
+    })
 }

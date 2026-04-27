@@ -1,5 +1,4 @@
 <?php
-
 header("Content-Type: application/json");
 
 require_once __DIR__ . '/../conf/db.php';
@@ -15,7 +14,6 @@ try {
     $facebook = $_POST['facebook'];
     $contact = $_POST['contact'];
     $loster = $_POST['loster'];
-    $status = $_POST['status'];
     $email = $_POST['email'];
     $date = $_POST['date'];
     $item = $_POST['item'];
@@ -28,18 +26,19 @@ try {
     if (isset($_FILES['image1']) && $_FILES['image1']['error'] === UPLOAD_ERR_OK) { // Check if image1 is uploaded without errors
         $tmp1 = $tmpDir . "/" . uniqid("img1_") . "_" . $_FILES['image1']['name'];  // Create a unique temporary file path
         move_uploaded_file($_FILES['image1']['tmp_name'], $tmp1);                   // Move the uploaded file to the temporary location
-        $image1URL = uploadAndGetImageURL($tmp1);                                   // Upload the image and get its URL
+        $image1URL = get_imageURL($tmp1);                                           // Upload the image and get its URL
         unlink($tmp1);                                                              // Delete the temporary file path
     }
     if (isset($_FILES['image2']) && $_FILES['image2']['error'] === UPLOAD_ERR_OK) {
         $tmp2 = $tmpDir . "/" . uniqid("img2_") . "_" . $_FILES['image2']['name'];
         move_uploaded_file($_FILES['image2']['tmp_name'], $tmp2);
-        $image2URL = uploadAndGetImageURL($tmp2);
+        $image2URL = get_imageURL($tmp2);
         unlink($tmp2);
     }
+
     if (isset($_SESSION['userID'])) $userID = $_SESSION['userID'];
 
-    $output = insertLostReport(
+    $insertedID = insert_lostreport(
         $conn,
         $userID,
         $item,
@@ -55,10 +54,12 @@ try {
         $email
     );
 
+    if ($insertedID == 0) throw new Exception("insert_lostreport failed");
+
     echo json_encode([
         "success" => true,
         "redirect" => null,
-        "lost_report_id" => $output
+        "data" => ["lost_report_id" => $insertedID]
     ]);
 }
 catch (Exception $e) {
@@ -66,6 +67,6 @@ catch (Exception $e) {
     echo json_encode([
         "success" => false,
         "redirect" => null,
-        "lost_report_id" => 0
+        "data" => ["lost_report_id" => 0]
     ]);
 }

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/popups.css">
+    <title>DYCIfinder</title>
+</head>
+<body>
+    <header>
+        <h2><a href="search_found.html">DYCIfinder</a></h2>
+        <h3>Report a found item</h3>
+    </header>
+    <hr>
+    <main>
+        <div>
+            <label>Finder's Name</label>
+            <input type="text" id="foundpost-findername">
+            <br>
+            <label>Item Name</label>
+            <input type="text" id="foundpost-itemname">
+            <br>
+            <label>Item Category</label>
+            <select id="foundpost-itemcategory">
+            </select>
+            <br>
+            <label>Item Description</label>
+            <textarea id="foundpost-description"></textarea>
+            <br>
+            <label>Find Location</label>
+            <select id="foundpost-findlocation">
+            </select>
+            <br>
+            <label>Find Date</label>
+            <input type="date" id="foundpost-finddate">
+            <br>
+            <label>Item Photo</label>
+            <input type="file" accept="image/*" id="foundpost-image">
+            <button id="remove-image" style="display: none;">X</button>
+            <img id="preview-image">
+            <br>
+            <button id="submit-foundpost-btn">Submit</button>
+        </div>
+    </main>
+    <script type="module" src="js/report_found.js"></script>
+</body>
+</html>

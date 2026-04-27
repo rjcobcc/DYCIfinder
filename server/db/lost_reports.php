@@ -1,6 +1,6 @@
 <?php
 
-function insertLostReport(
+function insert_lostreport( // returns int (inserted row ID) or 0 if insert failed
     $conn,
     $user_id,
     $item_name,

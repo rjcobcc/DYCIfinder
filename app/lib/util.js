@@ -1,18 +1,21 @@
-import { API } from '../conf/api.js';
-import { showOKPopup } from './popups.js';
+import { API_URL } from '../conf/api.js';
+import { popupMessage } from './popups.js';
 
 
 
-export async function loadSelectOptions(selectionID, apiLink, columnName) {
+export async function loadSelection(selectionID, apiLink, columnName) {
     const categorySelect = document.getElementById(selectionID);
 
-    // fetch options from server
-    const result = await fetch(API + '/' + apiLink, {method: "POST"});
+    const result = await fetch(API_URL + '/' + apiLink, {method: "POST"});
     const response = await result.json();
     console.log(response);
+    
+    const optionOther = document.createElement("option");
+    optionOther.textContent = "Other";
+    categorySelect.appendChild(optionOther);
 
     if (!response.success) {
-        showOKPopup("Failed to load options for: " + selectionID);
+        popupMessage("Failed to fetch options for: " + selectionID);
         return;
     }
     
@@ -23,9 +26,5 @@ export async function loadSelectOptions(selectionID, apiLink, columnName) {
         option.textContent = data[i][columnName];
         categorySelect.appendChild(option);
     }
-
-    const option = document.createElement("option");
-    option.textContent = "Other";
-    categorySelect.appendChild(option);
 }
 
