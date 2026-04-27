@@ -31,7 +31,7 @@ CREATE TABLE found_reports (
 
     finder_name VARCHAR(64),
 
-    report_status VARCHAR(16) DEFAULT 'Pending', -- Pending -> Public -> Claimed
+    report_status VARCHAR(16) DEFAULT 'Pending', -- Pending -> Unclaimed -> Claimed
     claimant_post_type VARCHAR(8), -- claimant/owner's post type (claim post or lost report)
     claimant_post_id INT, -- claimant/owner's post id
 

@@ -2,7 +2,7 @@
 
 function get_public_foundreports($conn, $page, $keyword, $category, $location, $order) { // returns [] or [['id' => int, 'item_name' => string, ...], ...]
     $pageLimit = 9;
-    $sql = "SELECT id, item_name, item_category, find_location, find_date FROM found_reports WHERE report_status = 'Public'";
+    $sql = "SELECT id, item_name, item_category, find_location, find_date FROM found_reports WHERE report_status = 'Unclaimed'";
     $params = [];
     $types = "";
 
