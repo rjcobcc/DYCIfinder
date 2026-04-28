@@ -9,6 +9,7 @@ require_once __DIR__ . '/../lib/img_host.php';
 try {
     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
+    $userID = $_SESSION['userID'] ?? null;
     $description = $_POST['description'];
     $category = $_POST['category'];
     $location = $_POST['location'];
@@ -20,8 +21,7 @@ try {
     $item = $_POST['item'];
     $image1URL = null;
     $image2URL = null;
-    $userID = $_SESSION['userID'] ?? null;
-
+    
     // Convert image uploads to URLs with free image hosting
     $tmpDir = sys_get_temp_dir();                                                   // Get the system temporary directory
     if (isset($_FILES['image1']) && $_FILES['image1']['error'] === UPLOAD_ERR_OK) { // Check if image1 is uploaded without errors
@@ -53,17 +53,19 @@ try {
         $email
     );
 
-    if ($insertedID == 0) 
-        throw new Exception("insert_lostreport failed");
-
-    echo json_encode([
-        "success" => true,
-        "redirect" => null,
-        "data" => ["lost_report_id" => $insertedID]
-    ]);
+    if ($insertedID > 0) {
+        echo json_encode([
+            "success" => true,
+            "redirect" => null,
+            "data" => ["lost_report_id" => $insertedID]
+        ]);
+        exit();
+    }
 }
 catch (Exception $e) {
     error_log("Error post_lost.php : " . $e->getMessage());
+}
+finally {
     echo json_encode([
         "success" => false,
         "redirect" => null,
