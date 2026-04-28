@@ -88,11 +88,11 @@ async function loadFoundPosts() {
 
 
 async function goPrevPage() {
-    if (onLastPage === 1) 
+    if (currentPage == 1) 
         return;
     currentPage -= 1;
     loadFoundPosts();
-    document.getElementById("current-page").textContent = page;
+    document.getElementById("current-page").textContent = currentPage;
 }
 
 
@@ -102,5 +102,5 @@ async function goNextPage() {
         return;
     currentPage += 1;
     loadFoundPosts();
-    document.getElementById("current-page").textContent = page;
+    document.getElementById("current-page").textContent = currentPage;
 }
