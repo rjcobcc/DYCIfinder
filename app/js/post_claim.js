@@ -18,6 +18,42 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
+async function loadItemInfo() {
+    if (itemID == null || itemID == "") {
+        window.location.href = "search_found.html";
+    }
+
+    try {
+        const result = await fetch(`${API_URL}/get_foundreport.php`, {
+            method: "POST",
+            headers: {
+                "Content-Type":
+                "application/json"
+            },
+            body: JSON.stringify({
+                id: itemID
+            })
+        });
+        const response = await result.json();
+        console.log(response);
+
+        if (!response.success) 
+            throw new Error();
+
+        const data = response.data;
+        document.getElementById("claim-itemname").textContent = data.item_name;
+        document.getElementById("claim-itemcategory").textContent = data.item_category;
+        document.getElementById("claim-findlocation").textContent = data.find_location;
+        document.getElementById("claim-finddate").textContent = data.find_date;
+    } 
+    catch (e) {
+        console.log(e);
+        popupMessage("Failed to load item info.<br>Please try again.");
+    }
+}
+
+
+
 async function claimPost() {
     if (runningClaimPost) 
         return;
@@ -85,41 +121,5 @@ async function claimPost() {
     }
     finally {
         runningClaimPost = false;
-    }
-}
-
-
-
-async function loadItemInfo() {
-    if (itemID == null || itemID == "") {
-        window.location.href = "search_found.html";
-    }
-
-    try {
-        const result = await fetch(`${API_URL}/get_foundreport.php`, {
-            method: "POST",
-            headers: {
-                "Content-Type":
-                "application/json"
-            },
-            body: JSON.stringify({
-                id: itemID
-            })
-        });
-        const response = await result.json();
-        console.log(response);
-
-        if (!response.success) 
-            throw new Error();
-
-        const data = response.data;
-        document.getElementById("claim-itemname").textContent = data.item_name;
-        document.getElementById("claim-itemcategory").textContent = data.item_category;
-        document.getElementById("claim-findlocation").textContent = data.find_location;
-        document.getElementById("claim-finddate").textContent = data.find_date;
-    } 
-    catch (e) {
-        console.log(e);
-        popupMessage("Failed to load item info.<br>Please try again.");
     }
 }
