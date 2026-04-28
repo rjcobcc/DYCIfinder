@@ -7,6 +7,7 @@ require_once __DIR__ . '/../db/campus_locations.php';
 try {
     $conn = new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
     $output = get_campuslocation_names($conn);
+    
     echo json_encode([
         "success" => true,
         "data" => $output
