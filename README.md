@@ -1,4 +1,12 @@
-# DATABASE
+## SETUP GUIDE
+
+1. Install XAMPP and run Apache and MySQL
+2. Download and move the project folder into the htdocs folder
+3. Initialize the database using the commands below
+4. Move email.php and keys.php to folder /server/conf
+5. Configure values of /app/conf/api.js and files in /server/conf
+
+## DATABASE
 
 ```sql
 CREATE DATABASE dycifinder;
@@ -53,7 +61,7 @@ CREATE TABLE lost_reports (
     image_url2 VARCHAR(512),
 
     loster_name VARCHAR(64),
-    facebook_profile VARCHAR(256),
+    facebook_profile VARCHAR(255),
     contact_number VARCHAR(16),
     email_address VARCHAR(32),
 
@@ -72,7 +80,7 @@ CREATE TABLE item_claims (
     image_url2 VARCHAR(512),
 
     claimant_name VARCHAR(64),
-    facebook_profile VARCHAR(256),
+    facebook_profile VARCHAR(255),
     contact_number VARCHAR(16),
     email_address VARCHAR(32),
 
@@ -84,9 +92,27 @@ CREATE TABLE item_claims (
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
+
+CREATE TABLE users(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    
+    email_address VARCHAR(32) UNIQUE NOT NULL,
+    hashed_pass VARCHAR(512),
+
+    full_name VARCHAR(255),
+    student_no VARCHAR(16),
+    facebook_profile VARCHAR(255),
+    contact_number VARCHAR(16),
+    user_role VARCHAR(8),
+
+    register_code INT,
+    regis_code_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 ```
 
-# SAMPLE DATA
+## SAMPLE DATA
 
 ```sql
 INSERT INTO campus_locations (location_name) VALUES
