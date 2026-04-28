@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/popups.css">
+    <title>DYCIfinder</title>
+</head>
+<body>
+    <header>
+        <h2><a href="search_found.html">DYCIfinder</a></h2>
+        <h3>Claim a found item</h3>
+    </header>
+    <hr>
+    <main>
+        <h3>Found Item Details</h3>
+        <p>Item Name: <span id="claim-itemname"></span></p>
+        <p>Item Category: <span id="claim-itemcategory"></span></p>
+        <p>Found Location: <span id="claim-findlocation"></span></p>
+        <p>Found Date: <span id="claim-finddate"></span></p>
+
+        <h3>Proof of Ownership</h3>
+        <label>Item Description</label>
+        <textarea id="claimpost-description"></textarea>
+        <br>
+        <label>Photo Proof 1</label>
+        <input type="file" accept="image/*" id="claimpost-image1">
+        <button type="button" id="remove-image1" style="display:none;">X</button>
+        <img id="preview-image1">
+        <br>
+        <label>Photo Proof 2</label>
+        <input type="file" accept="image/*" id="claimpost-image2">
+        <button type="button" id="remove-image2" style="display:none;">X</button>
+        <img id="preview-image2">
+
+        <h3>Owner's Details</h3>
+        <label>Owner Name</label>
+        <input type="text" id="claim-ownername">
+        <br>
+        <label>Facebook Profile URL</label>
+        <input type="url" id="claim-fbprofile" placeholder="https://www.facebook.com/------" value="https://www.facebook.com/">
+        <br>
+        <label>Phone Number</label>
+        <input type="tel" id="claim-contactno" placeholder="09---------" value="09">
+        <br>
+        <label>Email Address</label>
+        <input type="email" id="claim-email">
+
+        <br><br>
+        <button id="claim-btn">Submit</button>
+    </main>
+    <script type="module" src="js/post_claim.js"></script>
+</body>
+</html>

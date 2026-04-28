@@ -1,5 +1,6 @@
 <?php
 header("Content-Type: application/json");
+session_start();
 
 require_once __DIR__ . '/../conf/db.php';
 require_once __DIR__ . '/../db/found_reports.php';
@@ -15,7 +16,7 @@ try {
     $item = $_POST['item'];
     $date = $_POST['date'];
     $imageURL = null;
-    $userID = null;
+    $userID = $_SESSION['userID'] ?? null;
     
     // Convert image uploads to URLs with free image hosting
     $tmpDir = sys_get_temp_dir();                                                   // Get the system temporary directory
@@ -25,8 +26,6 @@ try {
         $imageURL = get_imageURL($tmp1);                                           // Upload the image and get its URL
         unlink($tmp1);                                                              // Delete the temporary file path
     }
-
-    if (isset($_SESSION['userID'])) $userID = $_SESSION['userID'];
 
     $insertedID = insert_foundreport(
         $conn,
@@ -40,7 +39,8 @@ try {
         $imageURL
     );
 
-    if ($insertedID == 0) throw new Exception("insert_foundreport failed");
+    if ($insertedID == 0) 
+        throw new Exception("insert_foundreport failed");
     
     echo json_encode([
         "success" => true,

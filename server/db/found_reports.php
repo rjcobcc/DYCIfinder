@@ -91,7 +91,7 @@ function insert_foundreport( // returns int (inserted row ID) or 0 if insert fai
 
 
 function get_public_foundreport($conn, $id) { // returns null or ['item_name' => string, 'item_category' => string, ...]
-    $stmt = $conn->prepare("SELECT item_name, item_category, find_location, find_date FROM found_reports WHERE id = ? LIMIT 1");
+    $stmt = $conn->prepare("SELECT item_name, item_category, find_location, find_date FROM found_reports WHERE id = ? AND report_status = 'Unclaimed' LIMIT 1");
     $stmt->bind_param("i", $id);
 
     $stmt->execute();

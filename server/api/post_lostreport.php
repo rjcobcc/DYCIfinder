@@ -1,5 +1,6 @@
 <?php
 header("Content-Type: application/json");
+session_start();
 
 require_once __DIR__ . '/../conf/db.php';
 require_once __DIR__ . '/../db/lost_reports.php';
@@ -19,7 +20,7 @@ try {
     $item = $_POST['item'];
     $image1URL = null;
     $image2URL = null;
-    $userID = null;
+    $userID = $_SESSION['userID'] ?? null;
 
     // Convert image uploads to URLs with free image hosting
     $tmpDir = sys_get_temp_dir();                                                   // Get the system temporary directory
@@ -34,9 +35,7 @@ try {
         move_uploaded_file($_FILES['image2']['tmp_name'], $tmp2);
         $image2URL = get_imageURL($tmp2);
         unlink($tmp2);
-    }
-
-    if (isset($_SESSION['userID'])) $userID = $_SESSION['userID'];
+    }    
 
     $insertedID = insert_lostreport(
         $conn,
@@ -54,7 +53,8 @@ try {
         $email
     );
 
-    if ($insertedID == 0) throw new Exception("insert_lostreport failed");
+    if ($insertedID == 0) 
+        throw new Exception("insert_lostreport failed");
 
     echo json_encode([
         "success" => true,
