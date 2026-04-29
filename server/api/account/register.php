@@ -13,7 +13,7 @@ try {
     $email = $inputs['email'];
     $code = $inputs['code'];
 
-    $user = get_user_IDandRole($conn, $email);
+    $user = get_user_by_email($conn, $email);
     $validCode = get_valid_user_code($conn, $email);
 
     if (!$validCode || $code != $validCode) {

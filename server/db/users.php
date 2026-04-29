@@ -17,23 +17,6 @@ function get_user_hashedpass($conn, $email) { // return string or null
 
 
 
-function get_user_IDandRole($conn, $email) { // return ['id' => int, 'user_role' => string] or null
-    $stmt = $conn->prepare("
-        SELECT id, user_role FROM users WHERE email_address = ?
-    ");
-
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-
-    $res = $stmt->get_result();
-    $row = $res->fetch_assoc();
-
-    $stmt->close();
-    return $row ? $row : null;
-}
-
-
-
 function store_user_code($conn, $email, $code) { // return success, true or false
     $stmt = $conn->prepare("
         INSERT INTO users (email_address, register_code, regis_code_created_at)
@@ -86,9 +69,23 @@ function edit_user_attribute($conn, $id, $column, $input) { // return success, t
 
 
 
-function get_user($conn, $id) { // return null or ['id' => int, 'user_role' => string]
+function get_user_by_id($conn, $id) { // return null or ['id' => int, 'user_role' => string]
     $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
     $stmt->bind_param("i", $id);
+    $stmt->execute();
+
+    $res = $stmt->get_result();
+    $row = $res->fetch_assoc();
+
+    $stmt->close();
+    return $row;
+}
+
+
+
+function get_user_by_email($conn, $email) { // return null or ['id' => int, 'user_role' => string]
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email_address = ?");
+    $stmt->bind_param("s", $email);
     $stmt->execute();
 
     $res = $stmt->get_result();

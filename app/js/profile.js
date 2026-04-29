@@ -2,9 +2,13 @@ import { popupMessage } from "../lib/popups.js";
 import { API_URL } from "../conf/api.js";
 
 let runningUpdateUser = false;
+let runningChangePassword = false;
 
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("changepass-btn").addEventListener("click", function () {
+        document.getElementById("old-pass").value = "";
+        document.getElementById("new-pass0").value = "";
+        document.getElementById("new-pass1").value = "";
         document.getElementById("changepass-form").style.display = "block";
     });
     document.getElementById("cancel-changepass-btn").addEventListener("click", function () {
@@ -80,11 +84,48 @@ async function updateUser() {
 
 
 async function changePassword() {
+    if (runningChangePassword) return;
+    runningChangePassword = true;
+    
     const current_password = document.getElementById("old-pass").value.trim();
     const new_password = document.getElementById("new-pass0").value.trim();
     const confirm_password = document.getElementById("new-pass1").value.trim();
 
+    let invalidMessage = null;
+    if (!current_password) invalidMessage = "Current password is required.";
+    else if (!new_password) invalidMessage = "New password is required.";
+    else if (new_password.length < 8) invalidMessage = "New password must be at least 8 characters.";
+    else if (!confirm_password) invalidMessage = "Confirm password is required.";
+    else if (new_password !== confirm_password) invalidMessage = "Passwords do not match.";
 
+    if (invalidMessage) {
+        await popupMessage(invalidMessage);
+        runningChangePassword = false;
+        return;
+    }
+
+    try {
+        const result = await fetch(API_URL + "/profile/change_pass.php", {
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify({ 
+                current_password, new_password
+            })
+        });
+        const response = await result.json();
+        console.log(response);
+
+        if (!response.success) throw new Error();
+        else popupMessage("Successfully changed password.");
+    }
+    catch (error) {
+        console.error(error);
+        popupMessage("Error changing password.<br>Please try again.");
+    }
+    finally {
+        document.getElementById("changepass-form").style.display = "none";
+        runningChangePassword = false;
+    }
 }
 
 

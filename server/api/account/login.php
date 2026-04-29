@@ -30,7 +30,7 @@ try {
         exit();
     }
     else {
-        $user = get_user_IDandRole($conn, $email);
+        $user = get_user_by_email($conn, $email);
         $_SESSION['userID'] = $user['id'];
         $_SESSION['admin'] = $user['user_role'] == 'Admin';
         echo json_encode([
