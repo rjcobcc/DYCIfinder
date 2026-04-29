@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
 async function loadUserInfo() {
     let response;
     try {
-        const result = await fetch(API_URL + "/get_user_info.php", {method: "POST"});
+        const result = await fetch(API_URL + "/profile/get_user_info.php", {method: "POST"});
         response = await result.json();
         console.log(response);
 
