@@ -1,29 +1,30 @@
-import { API_URL } from '../conf/api.js';
 import { popupMessage } from '../lib/popups.js';
+import { API_URL } from '../conf/api.js';
 
 let runningSubmitForm = false;
 let runningRequestCode = false;
 
-document.getElementById("getcode-btn").addEventListener("click", requestCode);
-document.getElementById("register-btn").addEventListener("click", submitRegisterForm);
-document.getElementById("login-btn").addEventListener("click", submitLoginForm);
-document.getElementById("login-tabbtn").addEventListener("click", showLoginForm);
-document.getElementById("register-tabbtn").addEventListener("click", showRegisterForm);
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("register-tabbtn").addEventListener("click", function () {changeForm("register")});
+    document.getElementById("login-tabbtn").addEventListener("click", function () {changeForm("login")});
+    document.getElementById("register-btn").addEventListener("click", submitRegisterForm);
+    document.getElementById("login-btn").addEventListener("click", submitLoginForm);
+    document.getElementById("getcode-btn").addEventListener("click", requestCode);
+});
 
 
 
 async function submitLoginForm() {
-    if (runningSubmitForm)
-        return;
+    if (runningSubmitForm) return;
     runningSubmitForm = true;
 
     const email = document.getElementById("login-email").value.trim();
     const password = document.getElementById("login-pass").value.trim();
 
     let invalidMessage = null;
-    if (!email)
+    if (!email) 
         invalidMessage = "Email is required.";
-    else if (!password)
+    else if (!password) 
         invalidMessage = "Password is required.";
 
     if (invalidMessage) {
@@ -35,7 +36,7 @@ async function submitLoginForm() {
     try {
         const result = await fetch(API_URL + "/auth/login.php", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {"Content-Type":"application/json"},
             body: JSON.stringify({ 
                 email, password
             })
@@ -45,48 +46,44 @@ async function submitLoginForm() {
 
         if (response.success) {
             switch(response.data['user_role']) {
-                case "Admin":
+                case "Admin": 
                     window.location.href = "admin.html";
                 break;
-                default:
+                case "Normal": 
                     window.location.href = "search_found.html";
                 break;
             }
         }
-        else 
-            throw new Error();
-        
+        else throw new Error();
     }
-    catch (e) {
-        console.log(e);
+    catch (error) {
+        console.error(error);
         await popupMessage("Login failed.<br><br>Please check your credentials.");
         runningSubmitForm = false;
-        return;
     }
 }
 
 
 
 async function submitRegisterForm() {
-    if (runningSubmitForm)
-        return;
+    if (runningSubmitForm) return;
     runningSubmitForm = true;
 
-    const email = document.getElementById("register-email").value.trim();
-    const password = document.getElementById("register-pass0").value.trim();
     const confirmPassword = document.getElementById("register-pass1").value.trim();
+    const password = document.getElementById("register-pass0").value.trim();
+    const email = document.getElementById("register-email").value.trim();
     const code = document.getElementById("register-code").value.trim();
 
     let invalidMessage = null;
-    if (!email)
+    if (!email) 
         invalidMessage = "Email is required.";
-    else if (!password)
+    else if (!password) 
         invalidMessage = "Password is required.";
-    else if (password.length < 8)
+    else if (password.length < 8) 
         invalidMessage = "Password must be at least 8 characters.";
-    else if (password !== confirmPassword)
+    else if (password !== confirmPassword) 
         invalidMessage = "Passwords do not match.";
-    else if (!code)
+    else if (!code) 
         invalidMessage = "Verification code is required.";
 
     if (invalidMessage) {
@@ -98,7 +95,7 @@ async function submitRegisterForm() {
     try {
         const result = await fetch(API_URL + "/auth/register.php", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {"Content-Type":"application/json"},
             body: JSON.stringify({ 
                 email, password, code 
             })
@@ -108,34 +105,35 @@ async function submitRegisterForm() {
 
         if (response.success) {
             await popupMessage("Registration successful!<br><br>You can now login.");
-            runningSubmitForm = false;
-            showLoginForm();
+            changeForm("login");
+            email.value = "";
+            code.value = "";
+            password.value = "";
+            confirmPassword.value = "";
         }
-        else 
-            throw new Error();
-        
+        else throw new Error();
     }
-    catch (e) {
-        console.log(e);
+    catch (error) {
+        console.error(error);
         await popupMessage("Registration failed.<br><br>Please try again.");
+    }
+    finally {
         runningSubmitForm = false;
-        return;
     }
 }
 
 
 
 async function requestCode() {
-    if (runningRequestCode)
-        return;
+    if (runningRequestCode) return;
     runningRequestCode = true;
 
     const email = document.getElementById("register-email").value.trim();
 
     let invalidMessage = null;
-    if (!email)
+    if (!email) 
         invalidMessage = "Email is required.";
-    else if (!email.includes("@") || !email.includes(".") || email.length < 10)
+    else if (!email.includes("@") || !email.includes(".") || email.length < 10) 
         invalidMessage = "Please enter a valid email address.";
 
     if (invalidMessage) {
@@ -147,7 +145,7 @@ async function requestCode() {
     try {
         const result = await fetch(API_URL + "/auth/request_code.php", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {"Content-Type":"application/json"},
             body: JSON.stringify({
                 email
             })
@@ -157,32 +155,31 @@ async function requestCode() {
 
         if (response.success) {
             await popupMessage("Verification code sent!<br><br>Please check your email.");
-            runningRequestCode = false;
         }
-        else 
-            throw new Error();
-        
+        else throw new Error();
     }
-    catch (e) {
-        console.log(e);
+    catch (error) {
+        console.error(error);
         await popupMessage("Failed to send code.<br><br>Please try again.");
+    }
+    finally {
         runningRequestCode = false;
-        return;
     }
 }
 
 
 
-function showLoginForm() {
-    document.getElementById("login-email").value = "";
-    document.getElementById("login-pass").value = "";
-    document.getElementById("register-form").style.display = "none";
-    document.getElementById("login-form").style.display = "block";
-}
-
-
-
-function showRegisterForm() {
-    document.getElementById("register-form").style.display = "block";
-    document.getElementById("login-form").style.display = "none";
+function changeForm(form) {
+    switch(form) {
+        case "login":
+            document.getElementById("login-pass").value = "";
+            document.getElementById("login-email").value = "";
+            document.getElementById("login-form").style.display = "block";
+            document.getElementById("register-form").style.display = "none";
+        break;
+        case "register":
+            document.getElementById("login-form").style.display = "none";
+            document.getElementById("register-form").style.display = "block";
+        break;
+    }
 }

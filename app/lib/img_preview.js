@@ -1,7 +1,7 @@
 
 export function previewImage(input, previewId, removeBtnId) {
-    const preview = document.getElementById(previewId);
     const removeBtn = document.getElementById(removeBtnId);
+    const preview = document.getElementById(previewId);
     const reader = new FileReader();
 
     if (!input.files || !input.files[0]) {
@@ -21,9 +21,9 @@ export function previewImage(input, previewId, removeBtnId) {
 
 
 export function clearImage(inputId, previewId, removeBtnId) {
-    const input = document.getElementById(inputId);
-    const preview = document.getElementById(previewId);
     const removeBtn = document.getElementById(removeBtnId);
+    const preview = document.getElementById(previewId);
+    const input = document.getElementById(inputId);
 
     input.value = "";
     preview.src = "";
