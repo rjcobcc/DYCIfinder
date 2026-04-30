@@ -105,7 +105,7 @@ CREATE TABLE foundreport_claims (
 
 CREATE TABLE users(
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_role VARCHAR(8) DEFAULT 'Normal',
+    user_role VARCHAR(8) DEFAULT 'Normal', -- Normal or Admin
 
     email_address VARCHAR(32) UNIQUE NOT NULL,
     hashed_pass VARCHAR(512),
