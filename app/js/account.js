@@ -1,4 +1,4 @@
-import { popupMessage } from '../lib/popups.js';
+import { popupMessage, popupLoading } from '../lib/popups.js';
 import { API_URL } from '../conf/api.js';
 
 let runningSubmitForm = false;
@@ -171,6 +171,8 @@ async function requestCode() {
     }
 
     try {
+        popupLoading();
+        
         const result = await fetch(API_URL + "/account/request_code.php", {
             method: "POST",
             headers: {"Content-Type":"application/json"},

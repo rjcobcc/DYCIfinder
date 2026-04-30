@@ -55,6 +55,26 @@ export async function popupMessage(content = "...") {
 
 
 
+export async function popupLoading() {
+    await loadPopups()
+
+    clearActive()
+
+    return new Promise((resolve) => {
+        const tpl = document.getElementById("popup-loading")
+        const node = tpl.content.cloneNode(true)
+
+        const container = node.querySelector(".popup-container")
+
+        activePopup = container
+        activeResolve = resolve
+
+        document.body.appendChild(node)
+    })
+}
+
+
+
 export async function popupConfirm(content = "...") {
     await loadPopups()
 
