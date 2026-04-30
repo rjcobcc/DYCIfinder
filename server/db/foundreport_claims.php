@@ -1,6 +1,6 @@
 <?php
 
-function insert_item_claim($conn, // returns int (inserted row ID) or 0 if insert failed
+function insert_claim($conn, // returns int (inserted row ID) or 0 if insert failed
     $user_id, 
     $item_id, 
     $claim_description,

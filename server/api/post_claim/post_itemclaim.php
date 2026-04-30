@@ -3,7 +3,7 @@ header("Content-Type: application/json");
 session_start();
 
 require_once __DIR__ . '/../../conf/db.php';
-require_once __DIR__ . '/../../db/item_claims.php';
+require_once __DIR__ . '/../../db/foundreport_claims.php';
 require_once __DIR__ . '/../../lib/img_host.php';
 
 try {
@@ -34,7 +34,7 @@ try {
         unlink($tmp2);                                                                    
     }
 
-    $insertedID = insert_item_claim(
+    $insertedID = insert_claim(
         $conn,
         $userID,
         $itemID,
