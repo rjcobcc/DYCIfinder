@@ -16,18 +16,24 @@ try {
     $user = get_user_by_email($conn, $email);
     $validCode = get_valid_user_code($conn, $email);
 
-    if (!$validCode || $code != $validCode) {
+    if (!$validCode) {
         echo json_encode([
             "success" => false,
-            "message" => "Invalid Code"
+            "message" => "Code Not Found"
         ]);
         exit();
     }
-
-    if (edit_user_attribute($conn, $user['id'], "hashed_pass", password_hash($password, PASSWORD_DEFAULT))) {
+    elseif($code != $validCode) {
+        echo json_encode([
+            "success" => false,
+            "message" => "Incorrect Code"
+        ]);
+        exit();
+    }
+    elseif (edit_user_attribute($conn, $user['id'], "hashed_pass", password_hash($password, PASSWORD_DEFAULT))) {
         echo json_encode([
             "success" => true,
-            "message" => "Registration successful"
+            "message" => "User Registered"
         ]);
         exit();
     }
@@ -38,6 +44,6 @@ catch (Exception $e) {
 finally {
     echo json_encode([
         "success" => false,
-        "message" => "An error occurred. Please try again."
+        "message" => "Error Occured"
     ]);
 }

@@ -56,7 +56,7 @@ try {
     if ($insertedID > 0) {
         echo json_encode([
             "success" => true,
-            "redirect" => null,
+            "redirect" => "track.html?tab=losses",
             "data" => ["lost_report_id" => $insertedID]
         ]);
         exit();

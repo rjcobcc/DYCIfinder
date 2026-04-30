@@ -41,6 +41,7 @@ function get_valid_user_code($conn, $email) { // return code or null
         FROM users 
         WHERE email_address = ? 
         AND hashed_pass IS NULL
+        AND register_code_created_at >= (NOW() - INTERVAL 5 MINUTE)
     ");
 
     $stmt->bind_param("s", $email);

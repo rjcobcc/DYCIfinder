@@ -36,7 +36,7 @@ try {
         echo json_encode([
             "success" => true,
             "data" => ['user_role' => $user['user_role']],
-            "message" => "Login successful"
+            "message" => "Login Successful"
         ]);
         exit();
     }
@@ -48,6 +48,6 @@ finally {
     echo json_encode([
         "success" => false,
         'data' => [],
-        "message" => "An error occurred. Please try again."
+        "message" => "Error Occured"
     ]);
 }

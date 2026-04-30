@@ -52,7 +52,7 @@ try {
     if ($insertedID > 0) {
         echo json_encode([
             "success" => true,
-            "redirect" => null,
+            "redirect" => "track.html?tab=finds",
             "data" => ["found_report_id" => $insertedID]
         ]);
         exit();

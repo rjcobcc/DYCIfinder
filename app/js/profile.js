@@ -99,6 +99,7 @@ async function changePassword() {
     else if (new_password.length < 8) invalidMessage = "New password must be at least 8 characters.";
     else if (!confirm_password) invalidMessage = "Confirm password is required.";
     else if (new_password !== confirm_password) invalidMessage = "Passwords do not match.";
+    else if (current_password === new_password) invalidMessage = "New password cannot be the same as the current password.";
 
     if (invalidMessage) {
         await popupMessage(invalidMessage);

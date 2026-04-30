@@ -88,7 +88,7 @@ async function postLostItemReport() {
 
         if (response.success) {
             await popupMessage("We received your report!<br>You will be notified if a found item matches your report.<br><br>Your report's ID is: " + response.data['lost_report_id']);
-            window.location.href = "search_found.html";
+            window.location.href = response.redirect;
         } 
         else throw new Error();
     }

@@ -12,9 +12,17 @@ try {
     $inputs = json_decode(file_get_contents("php://input"), true);
 
     $email = $inputs['email'];
+
+    if (get_user_hashedpass($conn, $email)) {
+        echo json_encode([
+            "success" => false,
+            "message" => "Already Registered"
+        ]);
+        exit();
+    }
+
     $code = random_int(100000, 999999);
-    if (!store_user_code($conn, $email, $code)) 
-        throw new Exception();
+    if (!store_user_code($conn, $email, $code)) throw new Exception();
 
     $subject = "Your " . PROJECT_NAME . " Verification Code";
     $body = "
@@ -26,9 +34,11 @@ try {
         </body>
         </html>
     ";
+
     if (send_email($email, $subject, $body)) {
         echo json_encode([
-            "success" => true
+            "success" => true,
+            "message" => "Code Sent"
         ]);
         exit();
     }
@@ -38,6 +48,7 @@ catch (Exception $e) {
 }
 finally {
     echo json_encode([
-        "success" => false
+        "success" => false,
+        "message" => "Error Occured"
     ]);
 }

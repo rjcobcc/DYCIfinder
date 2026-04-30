@@ -50,15 +50,30 @@ async function submitLoginForm() {
                     window.location.href = "admin.html";
                 break;
                 case "Normal": 
-                    window.location.href = "search_found.html";
+                    window.location.href = "profile.html";
                 break;
             }
         }
-        else throw new Error();
+        else {
+            switch(response.message) {
+                case "Unregistered Email":
+                    await popupMessage("This email is not registered.<br><br>Please check your credentials or register for an account.");
+                break;
+                case "Incorrect Password":
+                    await popupMessage("Incorrect password.<br><br>Please check your credentials.");
+                break;
+                case "Error Occured":
+                    await popupMessage("An error occurred while logging in.<br><br>Please try again.");
+                break;
+                default: throw new Error();
+            }
+        }
     }
     catch (error) {
         console.error(error);
-        await popupMessage("Login failed.<br><br>Please check your credentials.");
+        await popupMessage("An error occurred while logging in.<br><br>Please try again.");
+    }
+    finally {
         runningSubmitForm = false;
     }
 }
@@ -111,11 +126,24 @@ async function submitRegisterForm() {
             document.getElementById("register-code").value = "";
             document.getElementById("register-email").value = "";
         }
-        else throw new Error();
+        else {
+            switch(response.message) {
+                case "Code Not Found":
+                    await popupMessage("No valid code found for this email.<br><br>Please request a verification code first.");
+                break;
+                case "Incorrect Code":
+                    await popupMessage("Incorrect verification code.<br><br>Please check the code sent to your email.");
+                break;
+                case "Error Occured":
+                    await popupMessage("An error occurred during registration.<br><br>Please try again.");
+                break;
+                default: throw new Error();
+            }
+        }
     }
     catch (error) {
         console.error(error);
-        await popupMessage("Registration failed.<br><br>Please try again.");
+        await popupMessage("An error occurred during registration.<br><br>Please try again.");
     }
     finally {
         runningSubmitForm = false;
@@ -156,11 +184,21 @@ async function requestCode() {
         if (response.success) {
             await popupMessage("Verification code sent!<br><br>Please check your email.");
         }
-        else throw new Error();
+        else {
+            switch(response.message) {
+                case "Already Registered":
+                    await popupMessage("This email is already registered.<br><br>Please check your credentials or use a different email to register.");
+                break;
+                case "Error Occured":
+                    await popupMessage("An error occurred while sending the code.<br><br>Please try again.");
+                break;
+                default: throw new Error();
+            }
+        }
     }
     catch (error) {
         console.error(error);
-        await popupMessage("Failed to send code.<br><br>Please try again.");
+        await popupMessage("An error occurred while sending the code.<br><br>Please try again.");
     }
     finally {
         runningRequestCode = false;
