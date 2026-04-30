@@ -13,9 +13,8 @@ try {
     echo json_encode([
         "success" => true,
         "data" => [
-            "id" => $_SESSION['userID'] ?? 0,
-            "isAdmin" => $_SESSION['isAdmin'] ?? false,
-            "user" => $user
+            "user" => $user,
+            "isAdmin" => $_SESSION['isAdmin'] ?? false
         ]
     ]);
 }
