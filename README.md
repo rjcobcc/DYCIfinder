@@ -42,8 +42,7 @@ CREATE TABLE found_reports (
 
     finder_full_name VARCHAR(64),
     finder_student_id VARCHAR(16),
-    finder_student_course VARCHAR(32),
-    finder_student_section VARCHAR(32),
+    finder_course_section VARCHAR(8),
 
     finder_fb VARCHAR(255),
     finder_phone VARCHAR(16),
@@ -69,8 +68,7 @@ CREATE TABLE lost_reports (
 
     owner_full_name VARCHAR(64),
     owner_student_id VARCHAR(16),
-    owner_student_course VARCHAR(32),
-    owner_student_section VARCHAR(32),
+    owner_course_section VARCHAR(8),
 
     owner_fb VARCHAR(255),
     owner_phone VARCHAR(16),
@@ -92,8 +90,7 @@ CREATE TABLE foundreport_claims (
 
     owner_full_name VARCHAR(64),
     owner_student_id VARCHAR(16),
-    owner_student_course VARCHAR(32),
-    owner_student_section VARCHAR(32),
+    owner_course_section VARCHAR(8),
 
     owner_fb VARCHAR(255),
     owner_phone VARCHAR(16),
@@ -112,8 +109,7 @@ CREATE TABLE users(
 
     full_name VARCHAR(255),
     student_id VARCHAR(16),
-    student_course VARCHAR(32),
-    student_section VARCHAR(32),
+    course_section VARCHAR(8),
 
     facebook_url VARCHAR(255),
     phone_number VARCHAR(16),

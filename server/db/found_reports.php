@@ -61,16 +61,21 @@ function insert_foundreport( // returns int (inserted row ID) or 0 if insert fai
     $item_description,
     $find_location,
     $find_date,
-    $image_url
+    $image_url,
+    $studentID,
+    $fbURL,
+    $phone,
+    $email,
+    $coursection
 ) {
     $sql = "INSERT INTO found_reports 
-        (user_id, item_name, item_category, item_desc, find_location, find_date, image_url, finder_full_name) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        (user_id, item_name, item_category, item_desc, find_location, find_date, image_url, finder_full_name, finder_student_id, finder_fb, finder_phone, finder_email, finder_course_section) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ";
 
     $stmt = $conn->prepare($sql);
     $stmt->bind_param(
-        "isssssss",
+        "issssssssssss",
         $user_id,
         $item_name,
         $item_category,
@@ -78,7 +83,12 @@ function insert_foundreport( // returns int (inserted row ID) or 0 if insert fai
         $find_location,
         $find_date,
         $image_url,
-        $finder_name
+        $finder_name,
+        $studentID,
+        $fbURL,
+        $phone,
+        $email,
+        $coursection
     );
 
     $stmt->execute();

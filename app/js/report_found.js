@@ -13,7 +13,29 @@ document.addEventListener("DOMContentLoaded", function () {
     
     loadSelection("foundpost-itemcategory", "get_itemcategories.php", "category_name");
     loadSelection("foundpost-findlocation", "get_campuslocations.php", "location_name");
+    loadUserInfo();
 });
+
+
+
+async function loadUserInfo() {
+    try {
+        const result = await fetch(API_URL + "/get_user_info.php", {method: "POST"});
+        const response = await result.json();
+        console.log(response);
+
+        document.getElementById("student-id").value = response.data.user.student_id ?? "";
+        document.getElementById("full-name").value = response.data.user.full_name ?? "";
+        document.getElementById("email-address").value = response.data.user.email_address ?? "";
+        document.getElementById("phone-number").value = response.data.user.phone_number ?? "";
+        document.getElementById("fbprofile-url").value = response.data.user.facebook_url ?? "";
+        document.getElementById("course-section").value = response.data.user.course_section ?? "";
+    }
+    catch (error) {
+        console.error(error);
+        console.log("Failed to preload user info for the found report.");
+    }
+}
 
 
 
@@ -24,26 +46,35 @@ async function postFoundReport() {
     const description = document.getElementById("foundpost-description").value.trim(); 
     const category = document.getElementById("foundpost-itemcategory").value.trim(); 
     const location = document.getElementById("foundpost-findlocation").value.trim(); 
-    const finder = document.getElementById("foundpost-findername").value.trim();
+    const finder = document.getElementById("full-name").value.trim();
     const item = document.getElementById("foundpost-itemname").value.trim(); 
     const imageFile = document.getElementById("foundpost-image").files[0];
     const date = document.getElementById("foundpost-finddate").value;
+    const studentID = document.getElementById("student-id").value;
+    const fburl = document.getElementById("fbprofile-url").value;
+    const phone = document.getElementById("phone-number").value;
+    const email = document.getElementById("email-address").value;   
+    const coursection = document.getElementById("course-section").value; 
 
     let invalidMessage = null;
-    if (!finder) 
-        invalidMessage = "Finder name is required."; 
-    else if (!item) 
+    if (!item) 
         invalidMessage = "Item name is required.";  
     else if (!category) 
         invalidMessage = "Item Category is required."; 
     else if (!description) 
         invalidMessage = "Item Description is required."; 
+    else if (!imageFile) 
+        invalidMessage = "Item Photo is required."; 
     else if (!location) 
         invalidMessage = "Find Location is required."; 
     else if (!date) 
-        invalidMessage = "Find Date is required.";  
-    else if (!imageFile) 
-        invalidMessage = "Item Photo is required."; 
+        invalidMessage = "Find Date is required."; 
+    else if (!finder) 
+        invalidMessage = "Finder Name is required.";
+    else if (!coursection)
+        invalidMessage = "Course & Section is required.";
+    else if (!studentID)
+        invalidMessage = "Student ID is required."; 
 
     if (invalidMessage) {
         await popupMessage(invalidMessage);
@@ -61,6 +92,11 @@ async function postFoundReport() {
         formData.append("finder", finder);
         formData.append("item", item);
         formData.append("date", date);
+        formData.append("studentID", studentID);
+        formData.append("fburl", fburl);
+        formData.append("phone", phone);
+        formData.append("email", email);
+        formData.append("coursection", coursection);
         
         const result = await fetch(API_URL + "/post_foundreport.php", {
             method: "POST",

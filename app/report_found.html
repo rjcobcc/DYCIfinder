@@ -19,18 +19,21 @@
     
     <main>
         <div>
-            <label>Finder's Name</label>
-            <input type="text" id="foundpost-findername">
-            <br>
-            <label>Item Name</label>
+            <h3>Found Item's Details</h3>
+            <label>Name</label>
             <input type="text" id="foundpost-itemname">
             <br>
-            <label>Item Category</label>
+            <label>Category</label>
             <select id="foundpost-itemcategory">
             </select>
             <br>
-            <label>Item Description</label>
+            <label>Description</label>
             <textarea id="foundpost-description"></textarea>
+            <br>
+            <label>Photo</label>
+            <input type="file" accept="image/*" id="foundpost-image">
+            <button id="remove-image" style="display: none;">X</button>
+            <img id="preview-image">
             <br>
             <label>Find Location</label>
             <select id="foundpost-findlocation">
@@ -38,12 +41,26 @@
             <br>
             <label>Find Date</label>
             <input type="date" id="foundpost-finddate">
+            
+            <h3>Finder's Details</h3>
+            <label>Full Name</label>
+            <input type="text" id="full-name" placeholder="Bob John C. Doe">
             <br>
-            <label>Item Photo</label>
-            <input type="file" accept="image/*" id="foundpost-image">
-            <button id="remove-image" style="display: none;">X</button>
-            <img id="preview-image">
+            <label>Course & Section</label>
+            <input type="text" id="course-section" placeholder="AB1C">
             <br>
+            <label>Student ID</label>
+            <input type="text" id="student-id" placeholder="20XX-XXXXX">
+            <br>
+            <label>Facebook Profile URL (optional)</label>
+            <input type="url" id="fbprofile-url" placeholder="https://www.facebook.com/xxxxxxxxx">
+            <br>
+            <label>Phone Number (optional)</label>
+            <input type="tel" id="phone-number" placeholder="09xxxxxxxxx">
+            <br>
+            <label>Email Address (optional)</label>
+            <input type="text" id="email-address" placeholder="placeholder123@email.com">
+            <br><br>
             <button id="submit-foundpost-btn">Submit</button>
         </div>
     </main>

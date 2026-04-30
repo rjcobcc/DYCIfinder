@@ -16,6 +16,11 @@ try {
     $finder = $_POST['finder'];
     $item = $_POST['item'];
     $date = $_POST['date'];
+    $studentID = $_POST['studentID'];
+    $fburl = $_POST['fburl'];
+    $phone = $_POST['phone'];
+    $email = $_POST['email'];
+    $coursection = $_POST['coursection'];
     $imageURL = null;
     
     // Convert image uploads to URLs with free image hosting
@@ -36,7 +41,12 @@ try {
         $description,
         $location,
         $date,
-        $imageURL
+        $imageURL,
+        $studentID,
+        $fburl,
+        $phone,
+        $email,
+        $coursection
     );
 
     if ($insertedID > 0) {
