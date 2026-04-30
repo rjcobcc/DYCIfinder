@@ -10,7 +10,7 @@ try {
     $inputs = json_decode(file_get_contents("php://input"), true);
     $id = $_SESSION['userID'] ?? 0;
 
-    $success = update_user_profile($conn, $id, $inputs['fullname'], $inputs['studentid'], $inputs['fbprofile'], $inputs['contactno']);
+    $success = update_user_profile($conn, $id, $inputs['fullname'], $inputs['studentid'], $inputs['fbprofile'], $inputs['contactno'], $inputs['courseSection']);
 
     if ($success) {
         echo json_encode([

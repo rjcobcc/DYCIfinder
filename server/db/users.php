@@ -97,12 +97,12 @@ function get_user_by_email($conn, $email) { // return null or ['id' => int, 'use
 
 
 
-function update_user_profile($conn, $id, $fullname, $studentid, $fbprofile, $contactno) { // return success, true or false
+function update_user_profile($conn, $id, $fullname, $studentid, $fbprofile, $contactno, $courseSection) { // return success, true or false
     $stmt = $conn->prepare("
-        UPDATE users SET full_name = ?, student_id = ?, facebook_url = ?, phone_number = ? WHERE id = ?
+        UPDATE users SET full_name = ?, student_id = ?, facebook_url = ?, phone_number = ?, course_section = ? WHERE id = ?
     ");
 
-    $stmt->bind_param("ssssi", $fullname, $studentid, $fbprofile, $contactno, $id);
+    $stmt->bind_param("sssssi", $fullname, $studentid, $fbprofile, $contactno, $courseSection, $id);
     $result = $stmt->execute();
 
     $stmt->close();

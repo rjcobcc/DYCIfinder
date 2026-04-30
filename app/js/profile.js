@@ -36,6 +36,7 @@ async function loadUserInfo() {
             document.getElementById("email").value = response.data.user.email_address;
             document.getElementById("full-name").value = response.data.user.full_name;
             document.getElementById("student-id").value = response.data.user.student_id;
+            document.getElementById("course-section").value = response.data.user.course_section;
             document.getElementById("contact-no").value = response.data.user.phone_number;
             document.getElementById("fb-profile").value = response.data.user.facebook_url;
             document.getElementById("account-createdat").innerText = response.data.user.created_at;
@@ -57,13 +58,14 @@ async function updateUser() {
     const studentid = document.getElementById("student-id").value.trim();
     const contactno = document.getElementById("contact-no").value.trim();
     const fbprofile = document.getElementById("fb-profile").value.trim();
+    const courseSection = document.getElementById("course-section").value.trim();
 
     try {
         const result = await fetch(API_URL + "/profile/update_user.php", {
             method: "POST",
             headers: {"Content-Type":"application/json"},
             body: JSON.stringify({ 
-                fullname, studentid, contactno, fbprofile
+                fullname, studentid, contactno, fbprofile, courseSection
             })
         });
         const response = await result.json();
