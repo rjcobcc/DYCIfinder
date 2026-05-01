@@ -61,8 +61,7 @@ CREATE TABLE lost_reports (
     item_desc TEXT,
     lost_location VARCHAR(32),
     lost_date DATE,
-    image_url1 VARCHAR(512),
-    image_url2 VARCHAR(512),
+    image_url VARCHAR(512),
 
     user_id INT, -- null if logged out or unregistered
 

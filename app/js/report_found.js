@@ -1,6 +1,6 @@
 import { clearImage, previewImage } from '../lib/img_preview.js';
 import { getResizedImage } from '../lib/img_resizer.js';
-import { popupMessage } from '../lib/popups.js';
+import { popupLoading, popupMessage } from '../lib/popups.js';
 import { loadSelection } from '../lib/util.js';
 import { API_URL } from '../conf/api.js';
 
@@ -83,6 +83,8 @@ async function postFoundReport() {
     }
 
     try {
+        popupLoading();
+
         const formData = new FormData();
         const resized = await getResizedImage(imageFile);
         formData.append("description", description);

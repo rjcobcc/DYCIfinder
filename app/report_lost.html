@@ -19,44 +19,45 @@
     
     <main>
         <div>
-            <h3>Lost Item Details</h3>
-            <label>Item Name</label>
+            <h3>Lost Item's Details</h3>
+            <label>Name</label>
             <input type="text" id="lostpost-itemname">
             <br>
-            <label>Item Category</label>
+            <label>Category</label>
             <select id="lostpost-itemcategory"></select>
             <br>
-            <label>Item Description</label>
+            <label>Description</label>
             <textarea id="lostpost-description"></textarea>
+            <br>
+            <label>Photo</label>
+            <input type="file" accept="image/*" id="lostpost-image">
+            <button type="button" id="remove-image" style="display:none;">X</button>
+            <img id="preview-image">
             <br>
             <label>Lost Location</label>
             <select id="lostpost-lostlocation"></select>
             <br>
             <label>Lost Date</label>
             <input type="date" id="lostpost-lostdate">
-            <br>
-            <label>Photo Proof 1</label>
-            <input type="file" accept="image/*" id="lostpost-image1">
-            <button type="button" id="remove-image1" style="display:none;">X</button>
-            <img id="preview-image1">
-            <br>
-            <label>Photo Proof 2</label>
-            <input type="file" accept="image/*" id="lostpost-image2">
-            <button type="button" id="remove-image2" style="display:none;">X</button>
-            <img id="preview-image2">
-            <br>
+            
             <h3>Owner's Details</h3>
-            <label>Owner Name</label>
-            <input type="text" id="lostitem-ownername">
+            <label>Full Name</label>
+            <input type="text" id="full-name" placeholder="Bob John C. Doe">
             <br>
-            <label>Facebook Profile</label>
-            <input type="text" id="lostowner-fbprofile">
+            <label>Course & Section</label>
+            <input type="text" id="course-section" placeholder="BSXX-1X">
             <br>
-            <label>Contact Number</label>
-            <input type="text" id="lostowner-contactno">
+            <label>Student ID</label>
+            <input type="text" id="student-id" placeholder="20XX-XXXXX">
             <br>
-            <label>Email Address</label>
-            <input type="text" id="lostowner-email">
+            <label>Facebook Profile URL</label>
+            <input type="url" id="fbprofile-url" placeholder="https://www.facebook.com/xxxxxxxxx">
+            <br>
+            <label>Phone Number</label>
+            <input type="tel" id="phone-number" placeholder="09xxxxxxxxx">
+            <br>
+            <label>Email Address (optional)</label>
+            <input type="text" id="email-address" placeholder="placeholder123@email.com">
             <br><br>
             <button id="submit-lostpost-btn">Submit</button>
         </div>

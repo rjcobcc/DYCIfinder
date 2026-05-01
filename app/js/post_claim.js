@@ -1,6 +1,6 @@
 import { previewImage, clearImage } from '../lib/img_preview.js';
 import { getResizedImage } from '../lib/img_resizer.js';
-import { popupMessage } from '../lib/popups.js';
+import { popupLoading, popupMessage } from '../lib/popups.js';
 import { API_URL } from '../conf/api.js';
 
 const itemID = new URLSearchParams(window.location.search).get('item_id');
@@ -80,6 +80,8 @@ async function claimPost() {
     }
 
     try {
+        popupLoading();
+
         const formData = new FormData();
         const resized1 = await getResizedImage(claimpostImage1);
         const resized2 = await getResizedImage(claimpostImage2);
