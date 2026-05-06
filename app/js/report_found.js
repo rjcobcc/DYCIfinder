@@ -101,7 +101,6 @@ async function postFoundReport() {
 
         if (response.success) {
             await popupMessage("Thank you! Please drop off the item at the office to proceed.<br><br>Your report's ID is: " + response.data['found_report_id']);
-            window.location.href = response.redirect;
         }
         else throw new Error();
     }
