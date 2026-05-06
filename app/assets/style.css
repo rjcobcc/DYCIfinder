@@ -1,0 +1,177 @@
+:root {
+    --blue-start:   #1a6aff;
+    --blue-mid:     #0d3fa6;
+    --black-end:    #06080f;
+    --accent:       #4d8bff;
+    --surface:      #f4f6fb;
+    --card-bg:      #ffffff;
+    --border:       #e2e8f4;
+    --text-primary: #111827;
+    --text-muted:   #6b7280;
+    --radius:       12px;
+    --shadow-sm:    0 1px 4px rgba(0,0,0,0.07);
+    --shadow-md:    0 4px 16px rgba(0,0,0,0.10);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--surface);
+    color: var(--text-primary);
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* ── HEADER ── */
+header {
+    background: linear-gradient(135deg, var(--blue-start) 0%, var(--blue-mid) 45%, var(--black-end) 100%);
+    box-shadow: 0 4px 24px rgba(10,24,60,0.22);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* Top row: brand */
+.header-top {
+    min-height: 52px;
+    padding: 0 1.5rem;
+}
+
+/* Brand / logo */
+.brand {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.35rem;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.brand:hover { color: #cfe0ff; text-decoration: none; }
+.brand span  { color: var(--accent); }
+
+/* Nav row — below the brand, separated by a subtle line */
+.header-nav {
+    border-top: 1px solid rgba(255,255,255,0.10);
+    padding: 0 0.5rem;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+/* Plain text nav links — matching the reference image */
+.nav-link-item {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: rgba(255,255,255,0.55);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 9px 12px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+    display: inline-block;
+    line-height: 1.2;
+}
+.nav-link-item:hover { color: rgba(255,255,255,0.88); text-decoration: none; }
+
+/* Active / current page: bold white + bottom underline */
+.nav-link-item.active {
+    font-weight: 700;
+    color: #ffffff;
+    border-bottom: 2px solid #ffffff;
+}
+
+/* ── TYPOGRAPHY UTILITIES ── */
+.page-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.65rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+}
+
+.section-label {
+    font-size: 0.70rem;
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+/* ── SELECT CHEVRON WRAPPER (reusable) ── */
+.select-wrapper { position: relative; }
+.select-wrapper::after {
+    content: '▾';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    pointer-events: none;
+}
+.select-wrapper select { padding-right: 30px; }
+
+/* ── PRIMARY ACTION BUTTON (reusable) ── */
+.btn-primary-custom {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(90deg, var(--blue-start), var(--blue-mid));
+    border: none;
+    border-radius: 8px;
+    padding: 9px 26px;
+    cursor: pointer;
+    transition: opacity 0.18s, transform 0.12s;
+    white-space: nowrap;
+}
+.btn-primary-custom:hover  { opacity: 0.88; transform: translateY(-1px); }
+.btn-primary-custom:active { transform: translateY(0); }
+
+/* ── CARD SURFACE (reusable) ── */
+.card-surface {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+}
+
+/* ── PAGINATION BUTTON (reusable) ── */
+.btn-page {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--blue-mid);
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 20px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.btn-page:hover {
+    background: var(--blue-mid);
+    color: #fff;
+    border-color: var(--blue-mid);
+}
+
+/* ── BADGE (reusable) ── */
+.post-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.76rem;
+    font-weight: 500;
+    padding: 3px 9px;
+    border-radius: 20px;
+    background: #eef2ff;
+    color: var(--blue-mid);
+    border: 1px solid #d1dcff;
+}
+
+main { padding-bottom: 3rem; }

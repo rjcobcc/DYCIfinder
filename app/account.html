@@ -3,47 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./assets/popups.css">
     <title>DYCIfinder</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/style.css">
+    <link rel="stylesheet" href="./assets/popups.css">
+
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .layout {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (min-width: 768px) {
+            .layout {
+                flex-direction: row;
+            }
+        }
+
+        .left-panel {
+            background: linear-gradient(135deg, var(--blue-start), var(--blue-mid), var(--black-end));
+            color: #fff;
+            padding: 2.5rem;
+            display: flex;
+            flex: 1;
+            align-items: center;
+        }
+
+        @media (min-width: 768px) {
+            .left-panel {
+                flex: 7;
+                padding: 3rem;
+            }
+        }
+
+        .brand-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 2rem;
+        }
+
+        .brand-title span {
+            color: var(--accent);
+        }
+
+        .brand-desc {
+            color: rgba(255,255,255,0.75);
+            max-width: 420px;
+            margin-top: 12px;
+            font-size: 0.95rem;
+        }
+
+        .right-panel {
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            flex: 1;
+        }
+
+        @media (min-width: 768px) {
+            .right-panel {
+                flex: 5;
+            }
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 420px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            padding: 1.75rem;
+        }
+
+        .tab-link {
+            font-size: 0.85rem;
+            cursor: pointer;
+            color: var(--blue-mid);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .guest-btn {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
+
 <body>
-    <div>
-        <h1>DYCIfinder</h1>
-        <p>A website for retrieving lost and found items inside the campus</p> 
-    </div>
 
-    <div>
-        <div id="login-form">
-            <h2>Log in</h2>
-            <input type="email" id="login-email">
-            <input type="password" id="login-pass">
-            <button id="login-btn">Log in</button>
-            <br>
-            <p>Don't have an account? <a href="#" id="register-tabbtn">Register</a></p>
-            <button onclick="window.location.href='search_found.html'">Continue as Guest</button>
-        </div>
+<div class="layout">
 
-        <div id="register-form" style="display: none;">
-            <h2>Register</h2>
-            <label>Email</label>
-            <input type="email" id="register-email"><button id="getcode-btn">Get code</button>
-            <br>
-            <label>Code</label>
-            <input type="text" id="register-code">
-            <br>
-            <label>Password</label>
-            <br>
-            <input type="password" id="register-pass0">
-            <br>
-            <input type="password" id="register-pass1">
-            <br>
-            <button id="register-btn">Register</button>
-            <p>Already have an account? <a href="#" id="login-tabbtn">Log in</a></p>
-            <br>
-            <button onclick="window.location.href='search_found.html'">Continue as Guest</button>
+    <!-- LEFT -->
+    <div class="left-panel">
+        <div>
+            <div class="brand-title">DYCI<span>finder</span></div>
+            <p class="brand-desc">
+                A campus-based lost and found system for reporting, searching, and recovering items efficiently.
+            </p>
         </div>
     </div>
 
-    <script type="module" src="js/account.js"></script>
+    <!-- RIGHT -->
+    <div class="right-panel">
+
+        <div class="auth-card">
+
+            <!-- LOGIN -->
+            <div id="login-form">
+                <h5 class="fw-bold mb-3">Log in</h5>
+
+                <input type="email" class="form-control mb-2" id="login-email" placeholder="Email">
+                <input type="password" class="form-control mb-3" id="login-pass" placeholder="Password">
+
+                <button class="btn btn-primary-custom w-100" id="login-btn">Log in</button>
+
+                <p class="mt-3 mb-1 small">
+                    Don't have an account?
+                    <a class="tab-link" id="register-tabbtn">Register</a>
+                </p>
+
+                <button class="btn btn-outline-secondary guest-btn"
+                        onclick="window.location.href='search_found.html'">
+                    Continue as Guest
+                </button>
+            </div>
+
+            <!-- REGISTER -->
+            <div id="register-form" class="hidden">
+                <h5 class="fw-bold mb-3">Register</h5>
+
+                <label class="form-label">Email</label>
+                <div class="d-flex gap-2 mb-2">
+                    <input type="email" class="form-control" id="register-email">
+                    <button class="btn btn-outline-primary btn-sm" id="getcode-btn">Code</button>
+                </div>
+
+                <label class="form-label">Code</label>
+                <input type="text" class="form-control mb-2" id="register-code">
+
+                <label class="form-label">Password</label>
+                <input type="password" class="form-control mb-2" id="register-pass0">
+
+                <input type="password" class="form-control mb-3" id="register-pass1">
+
+                <button class="btn btn-primary-custom w-100" id="register-btn">
+                    Register
+                </button>
+
+                <p class="mt-3 mb-1 small">
+                    Already have an account?
+                    <a class="tab-link" id="login-tabbtn">Log in</a>
+                </p>
+
+                <button class="btn btn-outline-secondary guest-btn"
+                        onclick="window.location.href='search_found.html'">
+                    Continue as Guest
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script type="module" src="js/account.js"></script>
 </body>
 </html>

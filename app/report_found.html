@@ -3,65 +3,334 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DYCIfinder — Report a Find</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./assets/popups.css">
-    <title>DYCIfinder</title>
+    <link rel="stylesheet" href="./assets/style.css">
+
+    <!-- PAGE-SPECIFIC STYLES -->
+    <style>
+
+        /* ── FORM CARD ── */
+        .form-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            padding: 2rem 2rem 2.25rem;
+        }
+
+        /* Section headings inside the form */
+        .form-section-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1.25rem;
+        }
+
+        /* Divider between the two sections */
+        .section-divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 1.75rem 0 1.5rem;
+        }
+
+        /* Label */
+        .form-card label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        /* All text inputs, selects, textarea, date */
+        .form-card input[type="text"],
+        .form-card input[type="url"],
+        .form-card input[type="tel"],
+        .form-card input[type="date"],
+        .form-card select,
+        .form-card textarea {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 9px 12px;
+            width: 100%;
+            transition: border-color 0.15s, box-shadow 0.15s;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .form-card input[type="text"]:focus,
+        .form-card input[type="url"]:focus,
+        .form-card input[type="tel"]:focus,
+        .form-card input[type="date"]:focus,
+        .form-card select:focus,
+        .form-card textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(77,139,255,0.13);
+            background: #fff;
+        }
+
+        /* Textarea */
+        .form-card textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        /* Select chevron */
+        .select-wrap {
+            position: relative;
+        }
+        .select-wrap::after {
+            content: '▾';
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            pointer-events: none;
+        }
+        .select-wrap select { padding-right: 30px; }
+
+        /* ── FILE / IMAGE UPLOAD ── */
+        .upload-area {
+            background: var(--surface);
+            border: 2px dashed var(--border);
+            border-radius: 10px;
+            padding: 1.25rem 1rem;
+            text-align: center;
+            transition: border-color 0.15s, background 0.15s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .upload-area:hover {
+            border-color: var(--accent);
+            background: #f0f4ff;
+        }
+
+        .upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .upload-icon {
+            font-size: 1.6rem;
+            margin-bottom: 4px;
+            line-height: 1;
+        }
+
+        .upload-label-text {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .upload-label-text span {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Image preview */
+        #preview-image {
+            display: none;
+            width: 100%;
+            max-height: 220px;
+            object-fit: contain;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-top: 10px;
+            background: var(--surface);
+        }
+
+        #preview-image.visible { display: block; }
+
+        #remove-image {
+            display: none;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #c0392b;
+            background: #fff0ee;
+            border: 1px solid #f5b7b1;
+            border-radius: 6px;
+            padding: 4px 12px;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.15s;
+        }
+        #remove-image:hover { background: #fde8e6; }
+
+        /* Optional field hint */
+        .optional-hint {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: 0;
+            margin-left: 4px;
+        }
+
+        /* ── SUBMIT BUTTON ── */
+        #submit-foundpost-btn {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(90deg, var(--blue-start), var(--blue-mid));
+            border: none;
+            border-radius: 9px;
+            padding: 11px 36px;
+            cursor: pointer;
+            transition: opacity 0.18s, transform 0.12s;
+            width: 100%;
+        }
+        #submit-foundpost-btn:hover  { opacity: 0.88; transform: translateY(-1px); }
+        #submit-foundpost-btn:active { transform: translateY(0); }
+
+    </style>
 </head>
 <body>
+
     <header>
-        <h1><a href="index.html">DYCIfinder</a></h1>
-        <button onclick="window.location.href='profile.html'">Profile</button>
-        <button onclick="window.location.href='history.html'">History</button>
-        <button onclick="window.location.href='search_found.html'">Browse found items</button>
-        <button onclick="window.location.href='report_found.html'">Report a Find</button>
-        <button onclick="window.location.href='report_lost.html'">Report a Loss</button>
-        <hr>
-    </header>
-    
-    <main>
-        <div>
-            <h3>Found Item's Details</h3>
-            <label>Name</label>
-            <input type="text" id="foundpost-itemname">
-            <br>
-            <label>Category</label>
-            <select id="foundpost-itemcategory"></select>
-            <br>
-            <label>Description</label>
-            <textarea id="foundpost-description"></textarea>
-            <br>
-            <label>Photo</label>
-            <input type="file" accept="image/*" id="foundpost-image">
-            <button id="remove-image" style="display: none;">X</button>
-            <img id="preview-image">
-            <br>
-            <label>Find Location</label>
-            <select id="foundpost-findlocation"></select>
-            <br>
-            <label>Find Date</label>
-            <input type="date" id="foundpost-finddate">
-            
-            <h3>Finder's Details</h3>
-            <label>Full Name</label>
-            <input type="text" id="full-name" placeholder="Bob John C. Doe">
-            <br>
-            <label>Course & Section</label>
-            <input type="text" id="course-section" placeholder="BSXX-1X">
-            <br>
-            <label>Student ID</label>
-            <input type="text" id="student-id" placeholder="20XX-XXXXX">
-            <br>
-            <label>Facebook Profile URL (optional)</label>
-            <input type="url" id="fbprofile-url" placeholder="https://www.facebook.com/xxxxxxxxx">
-            <br>
-            <label>Phone Number (optional)</label>
-            <input type="tel" id="phone-number" placeholder="09xxxxxxxxx">
-            <br>
-            <label>Email Address (optional)</label>
-            <input type="text" id="email-address" placeholder="placeholder123@email.com">
-            <br><br>
-            <button id="submit-foundpost-btn">Submit</button>
+        <div class="header-top d-flex align-items-center">
+            <a href="index.html" class="brand">DYCI<span>finder</span></a>
         </div>
+        <nav class="header-nav d-flex align-items-center">
+            <a class="nav-link-item" onclick="window.location.href='search_found.html'">Found Items</a>
+            <a class="nav-link-item active" onclick="window.location.href='report_found.html'">Report Found</a>
+            <a class="nav-link-item" onclick="window.location.href='report_lost.html'">Report Lost</a>
+            <a class="nav-link-item" onclick="window.location.href='history.html'">History</a>
+            <a class="nav-link-item" onclick="window.location.href='profile.html'">Profile</a>
+        </nav>
+    </header>
+
+    <main class="container-fluid px-4 px-md-5 mt-4">
+
+        <div class="mb-1"><span class="section-label">Lost &amp; Found Portal</span></div>
+        <h2 class="page-title mb-4">Report a Find</h2>
+
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-8 col-xl-7">
+                <div class="form-card">
+
+                    <!-- FOUND ITEM DETAILS -->
+                    <div class="form-section-title">Found Item's Details</div>
+
+                    <div class="row g-3">
+
+                        <div class="col-12 col-sm-6">
+                            <label for="foundpost-itemname">Name</label>
+                            <input type="text" id="foundpost-itemname" placeholder="e.g. Black wallet">
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <label for="foundpost-itemcategory">Category</label>
+                            <div class="select-wrap">
+                                <select id="foundpost-itemcategory">
+                                    <option value="">Select category…</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="foundpost-description">Description</label>
+                            <textarea id="foundpost-description" placeholder="Describe the item — color, brand, distinguishing marks…"></textarea>
+                        </div>
+
+                        <div class="col-12">
+                            <label>Photo</label>
+                            <div class="upload-area">
+                                <input type="file" accept="image/*" id="foundpost-image">
+                                <div class="upload-icon">🖼️</div>
+                                <div class="upload-label-text"><span>Click to upload</span> or drag &amp; drop</div>
+                                <div class="upload-label-text" style="font-size:0.72rem; margin-top:2px;">PNG, JPG, WEBP</div>
+                            </div>
+                            <img id="preview-image" alt="Image preview">
+                            <button id="remove-image">✕ Remove photo</button>
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <label for="foundpost-findlocation">Find Location</label>
+                            <div class="select-wrap">
+                                <select id="foundpost-findlocation">
+                                    <option value="">Select location…</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <label for="foundpost-finddate">Find Date</label>
+                            <input type="date" id="foundpost-finddate">
+                        </div>
+
+                    </div>
+
+                    <hr class="section-divider">
+
+                    <!-- FINDER DETAILS -->
+                    <div class="form-section-title">Finder's Details</div>
+
+                    <div class="row g-3">
+
+                        <div class="col-12">
+                            <label for="full-name">Full Name</label>
+                            <input type="text" id="full-name" placeholder="Bob John C. Doe">
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <label for="course-section">Course &amp; Section</label>
+                            <input type="text" id="course-section" placeholder="BSXX-1X">
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <label for="student-id">Student ID</label>
+                            <input type="text" id="student-id" placeholder="20XX-XXXXX">
+                        </div>
+
+                        <div class="col-12">
+                            <label for="fbprofile-url">Facebook Profile URL <span class="optional-hint">(optional)</span></label>
+                            <input type="url" id="fbprofile-url" placeholder="https://www.facebook.com/xxxxxxxxx">
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <label for="phone-number">Phone Number <span class="optional-hint">(optional)</span></label>
+                            <input type="tel" id="phone-number" placeholder="09xxxxxxxxx">
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <label for="email-address">Email Address <span class="optional-hint">(optional)</span></label>
+                            <input type="text" id="email-address" placeholder="placeholder123@email.com">
+                        </div>
+
+                        <div class="col-12 mt-2">
+                            <button id="submit-foundpost-btn">Submit Report</button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
     </main>
+
     <script type="module" src="js/report_found.js"></script>
 </body>
 </html>

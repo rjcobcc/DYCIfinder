@@ -3,58 +3,311 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DYCIfinder — Submit Claim</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./assets/popups.css">
-    <title>DYCIfinder</title>
+    <link rel="stylesheet" href="./assets/style.css">
+
+    <style>
+
+        /* ── ITEM DETAILS SUMMARY CARD ── */
+        .item-summary {
+            background: linear-gradient(135deg, rgba(26,106,255,0.07) 0%, rgba(13,63,166,0.04) 100%);
+            border: 1px solid #d1dcff;
+            border-radius: var(--radius);
+            padding: 1.25rem 1.5rem;
+        }
+
+        .item-summary-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--blue-mid);
+            margin-bottom: 0.85rem;
+        }
+
+        .detail-row {
+            display: flex;
+            gap: 8px;
+            font-size: 0.875rem;
+            margin-bottom: 5px;
+            line-height: 1.45;
+        }
+
+        .detail-row:last-child { margin-bottom: 0; }
+
+        .detail-key {
+            color: var(--text-muted);
+            font-weight: 500;
+            white-space: nowrap;
+            min-width: 110px;
+        }
+
+        .detail-val {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* ── FORM CARD ── */
+        .form-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            padding: 2rem 2rem 2.25rem;
+        }
+
+        .form-section-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1.25rem;
+        }
+
+        .section-divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 1.75rem 0 1.5rem;
+        }
+
+        .form-card label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .form-card input[type="text"],
+        .form-card input[type="url"],
+        .form-card input[type="tel"],
+        .form-card input[type="email"],
+        .form-card textarea {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 9px 12px;
+            width: 100%;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        .form-card input:focus,
+        .form-card textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(77,139,255,0.13);
+            background: #fff;
+        }
+
+        .form-card textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        /* ── UPLOAD ── */
+        .upload-area {
+            background: var(--surface);
+            border: 2px dashed var(--border);
+            border-radius: 10px;
+            padding: 1.25rem 1rem;
+            text-align: center;
+            transition: border-color 0.15s, background 0.15s;
+            cursor: pointer;
+            position: relative;
+        }
+        .upload-area:hover { border-color: var(--accent); background: #f0f4ff; }
+        .upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+        .upload-icon { font-size: 1.6rem; margin-bottom: 4px; line-height: 1; }
+        .upload-label-text { font-size: 0.82rem; color: var(--text-muted); }
+        .upload-label-text span { color: var(--accent); font-weight: 600; }
+
+        #preview-image {
+            display: none;
+            width: 100%;
+            max-height: 220px;
+            object-fit: contain;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-top: 10px;
+            background: var(--surface);
+        }
+        #preview-image.visible { display: block; }
+
+        #remove-image {
+            display: none;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #c0392b;
+            background: #fff0ee;
+            border: 1px solid #f5b7b1;
+            border-radius: 6px;
+            padding: 4px 12px;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.15s;
+        }
+        #remove-image:hover { background: #fde8e6; }
+
+        /* ── SUBMIT ── */
+        #claim-btn {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(90deg, var(--blue-start), var(--blue-mid));
+            border: none;
+            border-radius: 9px;
+            padding: 11px 36px;
+            cursor: pointer;
+            transition: opacity 0.18s, transform 0.12s;
+            width: 100%;
+        }
+        #claim-btn:hover  { opacity: 0.88; transform: translateY(-1px); }
+        #claim-btn:active { transform: translateY(0); }
+
+    </style>
 </head>
 <body>
+
     <header>
-        <h1><a href="index.html">DYCIfinder</a></h1>
-        <button onclick="window.location.href='profile.html'">Profile</button>
-        <button onclick="window.location.href='history.html'">History</button>
-        <button onclick="window.location.href='search_found.html'">Browse found items</button>
-        <button onclick="window.location.href='report_found.html'">Report a Find</button>
-        <button onclick="window.location.href='report_lost.html'">Report a Loss</button>
-        <hr>
+        <div class="header-top d-flex align-items-center">
+            <a href="index.html" class="brand">DYCI<span>finder</span></a>
+        </div>
+        <nav class="header-nav d-flex align-items-center">
+            <a class="nav-link-item" onclick="window.location.href='search_found.html'">Found Items</a>
+            <a class="nav-link-item" onclick="window.location.href='report_found.html'">Report Found</a>
+            <a class="nav-link-item" onclick="window.location.href='report_lost.html'">Report Lost</a>
+            <a class="nav-link-item" onclick="window.location.href='history.html'">History</a>
+            <a class="nav-link-item" onclick="window.location.href='profile.html'">Profile</a>
+        </nav>
     </header>
-    
-    <main>
-        <h3>Found Item Details</h3>
-        <p>Item Name: <span id="claim-itemname"></span></p>
-        <p>Item Category: <span id="claim-itemcategory"></span></p>
-        <p>Found Location: <span id="claim-findlocation"></span></p>
-        <p>Found Date: <span id="claim-finddate"></span></p>
 
-        <h3>Proof of Ownership</h3>
-        <label>Item Description</label>
-        <textarea id="claimpost-description"></textarea>
-        <br>
-        <label>Photo Proof</label>
-        <input type="file" accept="image/*" id="claimpost-image">
-        <button type="button" id="remove-image" style="display:none;">X</button>
-        <img id="preview-image">
+    <main class="container-fluid px-4 px-md-5 mt-4">
 
-        <h3>Owner's Details</h3>
-        <label>Owner Name</label>
-        <input type="text" id="claim-ownername">
-        <br>
-        <label>Student ID</label>
-        <input type="text" id="claim-studentid">
-        <br>
-        <label>Course/Section</label>
-        <input type="text" id="claim-coursesection">
-        <br>
-        <label>Facebook Profile URL</label>
-        <input type="url" id="claim-fbprofile" placeholder="https://www.facebook.com/------" value="https://www.facebook.com/">
-        <br>
-        <label>Phone Number</label>
-        <input type="tel" id="claim-contactno" placeholder="09---------" value="09">
-        <br>
-        <label>Email Address</label>
-        <input type="email" id="claim-email">
+        <div class="mb-1"><span class="section-label">Lost &amp; Found Portal</span></div>
+        <h2 class="page-title mb-4">Submit a Claim</h2>
 
-        <br><br>
-        <button id="claim-btn">Submit</button>
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-8 col-xl-7 d-flex flex-column gap-3">
+
+                <!-- ITEM SUMMARY -->
+                <div class="item-summary">
+                    <div class="item-summary-title">Found Item Details</div>
+                    <div class="detail-row">
+                        <span class="detail-key">Item Name</span>
+                        <span class="detail-val" id="claim-itemname">—</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-key">Category</span>
+                        <span class="detail-val" id="claim-itemcategory">—</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-key">Found Location</span>
+                        <span class="detail-val" id="claim-findlocation">—</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-key">Found Date</span>
+                        <span class="detail-val" id="claim-finddate">—</span>
+                    </div>
+                </div>
+
+                <!-- CLAIM FORM -->
+                <div class="form-card">
+
+                    <!-- PROOF OF OWNERSHIP -->
+                    <div class="form-section-title">Proof of Ownership</div>
+
+                    <div class="row g-3">
+
+                        <div class="col-12">
+                            <label for="claimpost-description">Item Description</label>
+                            <textarea id="claimpost-description" placeholder="Describe the item in detail — unique marks, contents, where you last had it…"></textarea>
+                        </div>
+
+                        <div class="col-12">
+                            <label>Photo Proof</label>
+                            <div class="upload-area">
+                                <input type="file" accept="image/*" id="claimpost-image">
+                                <div class="upload-icon">🖼️</div>
+                                <div class="upload-label-text"><span>Click to upload</span> or drag &amp; drop</div>
+                                <div class="upload-label-text" style="font-size:0.72rem; margin-top:2px;">PNG, JPG, WEBP</div>
+                            </div>
+                            <img id="preview-image" alt="Image preview">
+                            <button type="button" id="remove-image">✕ Remove photo</button>
+                        </div>
+
+                    </div>
+
+                    <hr class="section-divider">
+
+                    <!-- OWNER DETAILS -->
+                    <div class="form-section-title">Owner's Details</div>
+
+                    <div class="row g-3">
+
+                        <div class="col-12">
+                            <label for="claim-ownername">Owner Name</label>
+                            <input type="text" id="claim-ownername" placeholder="Bob John C. Doe">
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <label for="claim-studentid">Student ID</label>
+                            <input type="text" id="claim-studentid" placeholder="20XX-XXXXX">
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <label for="claim-coursesection">Course / Section</label>
+                            <input type="text" id="claim-coursesection" placeholder="BSXX-1X">
+                        </div>
+
+                        <div class="col-12">
+                            <label for="claim-fbprofile">Facebook Profile URL</label>
+                            <input type="url" id="claim-fbprofile" placeholder="https://www.facebook.com/xxxxxxxxx" value="https://www.facebook.com/">
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <label for="claim-contactno">Phone Number</label>
+                            <input type="tel" id="claim-contactno" placeholder="09xxxxxxxxx" value="09">
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <label for="claim-email">Email Address</label>
+                            <input type="email" id="claim-email" placeholder="placeholder123@email.com">
+                        </div>
+
+                        <div class="col-12 mt-1">
+                            <button id="claim-btn">Submit Claim</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
     </main>
+
     <script type="module" src="js/post_claim.js"></script>
 </body>
 </html>
