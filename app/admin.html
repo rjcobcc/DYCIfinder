@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/popups.css">
+    <title>DYCIfinder</title>
+</head>
+<body>
+    <header>
+        <h1><a href="index.html">DYCIfinder</a></h1>
+        <button onclick="window.location.href='search_found.html'">Found Items</button>
+        <button onclick="window.location.href='report_found.html'">Report Found</button>
+        <button onclick="window.location.href='report_lost.html'">Report Lost</button> 
+        <button onclick="window.location.href='profile.html'">Profile</button>
+        <button onclick="window.location.href='history.html'">History</button>
+        <hr>
+    </header>
+
+    <main>
+        <h2>Found Reports</h2>
+
+        <div id="filters-container">
+            <label>Keyword</label>
+            <input type="text" id="keyword-input">
+
+            <label>Category</label>
+            <select id="category-selection">
+                <option>Any</option>
+            </select>
+
+            <label>Location</label>
+            <select id="location-selection">
+                <option>Anywhere</option>
+            </select>
+
+            <label>Sort by</label>
+            <select id="sort-options">
+                <option>Newest first</option>
+                <option>Oldest first</option>
+            </select>
+
+            <button id="apply-filters-btn">Apply</button>
+        </div>
+
+        <div id="found-reports-container">
+            <template id="foundpost-template">
+                <div class="found-post">
+                    <hr>
+                    <img class="item-image">
+                    <h3 class="foundpost-name">Item Name</h3>
+                    <p>Category: 
+                        <span class="foundpost-category">Category123</span>
+                    </p>
+                    <p>Found at: 
+                        <span class="foundpost-location">Location123</span>
+                    </p>
+                    <p>Found on: 
+                        <span class="foundpost-date">2026-04-10</span>
+                    </p>
+                    <button class="update-found-btn">Update</button>
+                    <hr>
+                </div>
+            </template>
+        </div>
+
+        <div id="pagenav-container">
+            <button id="prev-pagebtn">Prev</button>
+            <span>Page <span id="current-page">1</span></span>
+            <button id="next-pagebtn">Next</button>
+        </div>
+    </main>
+
+    <script type="module" src="js/admin.js"></script>
+</body>
+</html>
