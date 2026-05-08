@@ -1,20 +1,26 @@
 import { API_URL } from '../conf/api.js';
-import { popupMessage } from '../lib/popups.js';
+import { popupLoading, popupMessage } from '../lib/popups.js';
 import { loadSelection } from '../lib/util.js';
+import { replaceImage } from '../lib/img_preview.js';
+import { getResizedImage } from '../lib/img_resizer.js';
 
 const foundReportID = new URLSearchParams(window.location.search).get('id');
 
 let runningLoadFoundReportInfo = false;
 let runningUpdateFoundReport = false;
+let runningSaveNewImage = false;
+let foundReportImageSRC = "";
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
     if (foundReportID == null || foundReportID == "") window.location.href = "admin.html";
 
-    document.getElementById("found-update-btn").addEventListener("click", updateFoundReport);
-    
     loadSelection("found-location-select", "get_campuslocations.php", "location_name");
     loadSelection("found-category-select", "get_itemcategories.php", "category_name");
-    loadFoundReportInfo();
+    await loadFoundReportInfo(); 
+    
+    document.getElementById("found-update-btn").addEventListener("click", updateFoundReport);
+    document.getElementById("foundpost-image").addEventListener("change", function () { replaceImage(this, "found-image", foundReportImageSRC); })
+    document.getElementById("upload-image").addEventListener("click", saveNewImage)
 });
 
 
@@ -28,7 +34,7 @@ async function loadFoundReportInfo() {
     const descriptionInput = document.getElementById("found-item-desc");
     const locationSelect = document.getElementById("found-location-select");
     const findDateInput = document.getElementById("found-find-date");
-    const previewImage = document.getElementById("found-current-image");
+    const previewImage = document.getElementById("found-image");
     const finderNameInput = document.getElementById("found-finder-name");
     const studentIdInput = document.getElementById("found-finder-student-id");
     const courseSectionInput = document.getElementById("found-finder-course-section");
@@ -64,6 +70,7 @@ async function loadFoundReportInfo() {
     locationSelect.value = data.find_location;
     findDateInput.value = data.find_date;
     previewImage.src = data.image_url;
+    foundReportImageSRC = data.image_url;
     finderNameInput.value = data.finder_full_name;
     studentIdInput.value = data.finder_student_id;
     courseSectionInput.value = data.finder_course_section;
@@ -125,5 +132,48 @@ async function updateFoundReport() {
     }
     finally {
         runningUpdateFoundReport = false;
+    }
+}
+
+
+
+async function saveNewImage() {
+    if (runningSaveNewImage) return;
+    runningSaveNewImage = true;
+    
+    popupLoading();
+
+    const imageFile = document.getElementById("foundpost-image").files[0];
+
+    if (!imageFile) {
+        popupMessage("Please select an image to upload.");
+        runningSaveNewImage = false;
+        return;
+    }
+
+    const formData = new FormData();
+    const resizedImage = await getResizedImage(imageFile);
+    formData.append("image", resizedImage);
+    formData.append("reportID", foundReportID);
+
+    try {
+        const result = await fetch(API_URL + "/admin/newimage_foundreport.php", {
+            method: "POST",
+            body: formData
+        });
+        const response = await result.json();
+        console.log(response);
+
+        if (response.success) {
+            await popupMessage("Successfully updated found report image.");
+        } 
+        else throw new Error();
+    }
+    catch (error) {
+        console.error(error);
+        await popupMessage("Error updating found report image.<br>Please try again.");
+    }
+    finally {
+        runningSaveNewImage = false;
     }
 }

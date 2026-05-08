@@ -246,3 +246,17 @@ function set_report_status($conn, $id, $status) {
 
     return $executed;
 }
+
+
+
+function set_report_image($conn, $id, $url) {
+    $sql = "UPDATE found_reports SET image_url = ? WHERE id = ?";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("si", $url, $id);
+
+    $executed = $stmt->execute();
+    $stmt->close();
+
+    return $executed;
+}
