@@ -18,6 +18,14 @@
     </header>
 
     <div id="report-info-form">
+        <label>Image</label>
+        <img id="found-current-image" alt="Item Image" src="./assets/loading.gif">
+        <br>
+        <input type="file" accept="image/*" id="foundpost-image">
+        <img id="found-preview-image" alt="Item Image" style="display: none;">
+        <br>
+        <button id="upload-image" style="display: none;">Save New Image</button>
+        <br>
         <label>Item Name</label>
         <input id="found-item-name" type="text">
         <br>
@@ -36,12 +44,6 @@
         <br>
         <label>Find Date</label>
         <input id="found-find-date" type="date">
-        <br>
-        <label>Image</label>
-        <img id="found-current-image" alt="Item Image">
-        <br>
-        <input type="file" accept="image/*" id="foundpost-image">
-        <img id="found-preview-image" alt="Item Image" style="display: none;">
         <br>
         <label>Finder Name</label>
         <input id="found-finder-name" type="text">

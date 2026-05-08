@@ -177,3 +177,58 @@ function get_foundreports($conn, $page, $keyword, $category, $location, $order) 
     $stmt->close();
     return $data;
 }
+
+
+
+function update_foundreport(
+    $conn,
+    $item_id,
+    $item_name,
+    $item_category,
+    $item_description,
+    $find_location,
+    $find_date,
+    $finder_name,
+    $studentID,
+    $fbURL,
+    $phone,
+    $email,
+    $coursection
+) {
+    $sql = "UPDATE found_reports 
+        SET item_name = ?,
+            item_category = ?,
+            item_desc = ?,
+            find_location = ?,
+            find_date = ?,
+            finder_full_name = ?,
+            finder_student_id = ?,
+            finder_fb = ?,
+            finder_phone = ?,
+            finder_email = ?,
+            finder_course_section = ?
+        WHERE id = ?
+    ";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param(
+        "sssssssssssi",
+        $item_name,
+        $item_category,
+        $item_description,
+        $find_location,
+        $find_date,
+        $finder_name,
+        $studentID,
+        $fbURL,
+        $phone,
+        $email,
+        $coursection,
+        $item_id
+    );
+
+    $executed = $stmt->execute();
+    $stmt->close();
+
+    return $executed;
+}
