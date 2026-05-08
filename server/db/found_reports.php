@@ -2,7 +2,7 @@
 
 function get_public_foundreports($conn, $page, $keyword, $category, $location, $order) { // returns [] or [['id' => int, 'item_name' => string, ...], ...]
     $pageLimit = 9;
-    $sql = "SELECT id, item_name, item_category, find_location, find_date FROM found_reports WHERE report_status != 'Pending'";
+    $sql = "SELECT id, item_name, item_category, find_location, find_date FROM found_reports WHERE report_status = 'Unclaimed'";
     $params = [];
     $types = "";
 
@@ -130,7 +130,7 @@ function get_foundreport($conn, $id) { // returns null or ['item_name' => string
 
 function get_foundreports($conn, $page, $keyword, $category, $location, $order) { // returns [] or [['id' => int, 'item_name' => string, ...], ...]
     $pageLimit = 9;
-    $sql = "SELECT id, item_name, item_category, find_location, find_date, image_url FROM found_reports WHERE 1 = 1";
+    $sql = "SELECT id, item_name, item_category, find_location, find_date, image_url, report_status FROM found_reports WHERE 1 = 1";
     $params = [];
     $types = "";
 
@@ -226,6 +226,20 @@ function update_foundreport(
         $coursection,
         $item_id
     );
+
+    $executed = $stmt->execute();
+    $stmt->close();
+
+    return $executed;
+}
+
+
+
+function set_report_status($conn, $id, $status) {
+    $sql = "UPDATE found_reports SET report_status = ? WHERE id = ?";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("si", $status, $id);
 
     $executed = $stmt->execute();
     $stmt->close();

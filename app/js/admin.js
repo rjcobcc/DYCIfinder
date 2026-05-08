@@ -1,4 +1,4 @@
-import { popupMessage } from '../lib/popups.js';
+import { popupConfirm, popupMessage } from '../lib/popups.js';
 import { loadSelection } from '../lib/util.js';
 import { API_URL } from '../conf/api.js';
 
@@ -66,9 +66,36 @@ async function loadFoundPosts() {
         clone.querySelector(".foundpost-location").textContent = post['find_location'];
         clone.querySelector(".foundpost-date").textContent = post['find_date'];
         clone.querySelector(".foundpost-category").textContent = post['item_category'];
+        
         clone.querySelector(".update-found-btn").addEventListener("click", function () {
             window.location.href = `found_report.html?id=${post['id']}`;
         });
+
+        const publishBtn = clone.querySelector(".publish-found-btn")
+
+        if (post['report_status'] != "Pending") {
+            publishBtn.style.display = "none";
+        }
+        else {
+            publishBtn.addEventListener("click", async function () {
+                const confirmed = await popupConfirm("The office has received this item?");
+                if (!confirmed) return;
+
+                const result = await fetch(API_URL + '/admin/publish_foundreport.php', {
+                    method: "POST",
+                    headers: {"Content-Type":"application/json"},
+                    body: JSON.stringify({ id: post['id'] })
+                });
+                const response = await result.json();
+                console.log(response);
+
+                if (response.success) {
+                    publishBtn.style.display = "none";
+                    await popupMessage("Successfully published report.");
+                }
+                else await popupMessage("Failed to publish report.");
+            });
+        }
         foundPostsContainer.appendChild(clone);
     }
 
