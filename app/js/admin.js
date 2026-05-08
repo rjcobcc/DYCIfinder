@@ -5,6 +5,7 @@ import { API_URL } from '../conf/api.js';
 let currentPage = 1;
 let onLastPage = false;
 let runningLoadFoundPosts = false;
+let runningPublishReport = false;
 
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("prev-pagebtn").addEventListener("click", goPrevPage);
@@ -78,8 +79,14 @@ async function loadFoundPosts() {
         }
         else {
             publishBtn.addEventListener("click", async function () {
+                if (runningPublishReport) return;
+                runningPublishReport = true;
+
                 const confirmed = await popupConfirm("The office has received this item?");
-                if (!confirmed) return;
+                if (!confirmed) {
+                    runningPublishReport = false;
+                    return;
+                }
 
                 const result = await fetch(API_URL + '/admin/publish_foundreport.php', {
                     method: "POST",
@@ -94,6 +101,8 @@ async function loadFoundPosts() {
                     await popupMessage("Successfully published report.");
                 }
                 else await popupMessage("Failed to publish report.");
+
+                runningPublishReport = false;
             });
         }
         foundPostsContainer.appendChild(clone);
