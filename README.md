@@ -31,7 +31,7 @@ CREATE TABLE found_reports (
     ownerpost_type VARCHAR(16), -- Claim or Lost Report
     ownerpost_id INT,
     
-    item_name VARCHAR(16),
+    item_name VARCHAR(32),
     item_category VARCHAR(32),
     item_desc TEXT,
     find_location VARCHAR(32),
