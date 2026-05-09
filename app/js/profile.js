@@ -127,5 +127,5 @@ async function logout() {
     console.log(response);
 
     if (!response.success) popupMessage("Failed to logout.<br>Please try again.");
-    else window.location.href = "account.html";
+    else window.location.href = "login.html";
 }

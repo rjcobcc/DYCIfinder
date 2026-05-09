@@ -38,7 +38,7 @@ async function submitLoginForm() {
     }
 
     try {
-        const result = await fetch(API_URL + "/account/login.php", {
+        const result = await fetch(API_URL + "/login/login.php", {
             method: "POST",
             headers: {"Content-Type":"application/json"},
             body: JSON.stringify({ 
@@ -114,7 +114,7 @@ async function submitRegisterForm() {
     }
 
     try {
-        const result = await fetch(API_URL + "/account/register.php", {
+        const result = await fetch(API_URL + "/login/register.php", {
             method: "POST",
             headers: {"Content-Type":"application/json"},
             body: JSON.stringify({ 
@@ -179,7 +179,7 @@ async function requestCode() {
     try {
         popupLoading();
         
-        const result = await fetch(API_URL + "/account/request_code.php", {
+        const result = await fetch(API_URL + "/login/request_code.php", {
             method: "POST",
             headers: {"Content-Type":"application/json"},
             body: JSON.stringify({
