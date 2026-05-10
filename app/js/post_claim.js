@@ -2,6 +2,7 @@ import { previewImage, clearImage } from '../lib/img_preview.js';
 import { getResizedImage } from '../lib/img_resizer.js';
 import { popupLoading, popupMessage } from '../lib/popups.js';
 import { API_URL } from '../conf/api.js';
+import { getUserInfo } from '../lib/util.js';
 
 const itemID = new URLSearchParams(window.location.search).get('item_id');
 let runningClaimPost = false;
@@ -12,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("remove-image").addEventListener("click", function () { clearImage("claimpost-image", "preview-image", "remove-image"); });
     
     loadItemInfo();
+    loadUserInfo();
 });
 
 
@@ -41,6 +43,19 @@ async function loadItemInfo() {
         console.error(error);
         popupMessage("Failed to load item info.<br>Please try again.");
     }
+}
+
+
+
+async function loadUserInfo() {
+    const data = await getUserInfo();
+    if (!data) return;
+    document.getElementById("claim-ownername").value = data.user.full_name ?? "";
+    document.getElementById("claim-studentid").value = data.user.student_id ?? "";
+    document.getElementById("claim-coursesection").value = data.user.course_section ?? "";
+    document.getElementById("claim-fbprofile").value = data.user.facebook_url ?? "";
+    document.getElementById("claim-email").value = data.user.email_address ?? "";
+    document.getElementById("claim-contactno").value = data.user.phone_number ?? "";
 }
 
 

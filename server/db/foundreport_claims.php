@@ -47,3 +47,16 @@ function get_user_foundreport_claims($conn, $page, $userID) {
     $stmt->close();
     return $data;
 }
+
+
+
+function get_claims($conn, $foundID) { // returns [] or [['id' => int, 'item_name' => string, ...], ...]
+    $sql = "SELECT * FROM foundreport_claims WHERE foundreport_id = ? ORDER BY id DESC";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $foundID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $data = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+    return $data;
+}

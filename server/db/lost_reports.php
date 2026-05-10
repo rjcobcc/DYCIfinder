@@ -68,3 +68,15 @@ function get_user_lostreports($conn, $page, $userID) {
     $stmt->close();
     return $data;
 }
+
+
+
+function get_losts($conn) {
+    $sql = "SELECT * FROM lost_reports";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $data = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+    return $data;
+}

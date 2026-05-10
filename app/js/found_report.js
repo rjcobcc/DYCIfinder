@@ -17,6 +17,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     loadSelection("found-location-select", "get_campuslocations.php", "location_name");
     loadSelection("found-category-select", "get_itemcategories.php", "category_name");
     await loadFoundReportInfo(); 
+    loadClaims();
+    loadLosts();
     
     document.getElementById("found-update-btn").addEventListener("click", updateFoundReport);
     document.getElementById("foundpost-image").addEventListener("change", function () { replaceImage(this, "found-image", foundReportImageSRC); })
@@ -176,4 +178,121 @@ async function saveNewImage() {
     finally {
         runningSaveNewImage = false;
     }
+}
+
+
+
+async function loadClaims() {
+    const claimsContainer = document.getElementById("claim-container");
+
+    const result = await fetch(API_URL + "/admin/get_claims.php", {
+        method: "POST", 
+        headers: {"Content-Type":"application/json"}, 
+        body: JSON.stringify({foundID: foundReportID})
+    });
+    const response = await result.json();
+    console.log(response);
+
+    if (!response.success) {
+        popupMessage("Failed to load claims.<br>Please try again.");
+        return; 
+    }
+
+    for (let i = 0; i < response.data.length; i++) {
+        const claim = response.data[i];
+        const claimTemplate = document.getElementById("claim-template").content.cloneNode(true);
+        claimTemplate.querySelector(".claimant-name").textContent = claim.owner_full_name;
+        claimTemplate.querySelector(".claim-image").src = claim.image_url;
+        claimTemplate.querySelector(".view-claim-btn").addEventListener("click", () => {
+            viewClaimDetails(claim);
+        });
+        claimsContainer.append(claimTemplate);
+    }
+}
+
+
+
+function viewClaimDetails(data) {
+    const claimDetailsTemplate = document.getElementById("viewdetails-claim").content.cloneNode(true);
+    const modal = claimDetailsTemplate.querySelector(".claim-details");
+
+    claimDetailsTemplate.querySelector(".claim-desc").textContent = data.claim_desc;
+    claimDetailsTemplate.querySelector(".claimant-name").textContent = data.owner_full_name;
+    claimDetailsTemplate.querySelector(".claim-detail-image").src = data.image_url;
+    claimDetailsTemplate.querySelector(".claim-student-id").textContent = data.owner_student_id;
+    claimDetailsTemplate.querySelector(".claim-course-section").textContent = data.owner_course_section;
+    claimDetailsTemplate.querySelector(".claim-fb").textContent = data.owner_fb;
+    claimDetailsTemplate.querySelector(".claim-phone").textContent = data.owner_phone;
+    claimDetailsTemplate.querySelector(".claim-email").textContent = data.owner_email;
+    claimDetailsTemplate.querySelector(".claim-created-at").textContent = data.created_at;
+    claimDetailsTemplate.querySelector(".claim-status").textContent = data.claim_status;
+
+    claimDetailsTemplate.querySelector(".match-claim-btn").addEventListener("click", () => {
+        
+    });
+
+    claimDetailsTemplate.querySelector(".close-claim-btn").addEventListener("click", (e) => {
+        modal.remove();
+    });
+
+    document.body.append(claimDetailsTemplate);
+}
+
+
+
+async function loadLosts() {
+    const lostsContainer = document.getElementById("lost-container");
+
+    const result = await fetch(API_URL + "/admin/get_losts.php");
+    const response = await result.json();
+    console.log(response);
+
+    if (!response.success) {
+        popupMessage("Failed to load losts.<br>Please try again.");
+        return; 
+    }
+
+    for (let i = 0; i < response.data.length; i++) {
+        const lost = response.data[i];
+        const lostTemplate = document.getElementById("lost-template").content.cloneNode(true);
+        lostTemplate.querySelector(".lost-owner-name").textContent = lost.owner_full_name;
+        lostTemplate.querySelector(".lost-item-name").textContent = lost.item_name;
+        lostTemplate.querySelector(".lost-image").src = lost.image_url;
+        lostTemplate.querySelector(".view-lost-btn").addEventListener("click", () => {
+            viewLostDetails(lost);
+        });
+        lostsContainer.append(lostTemplate);
+    }
+}
+
+
+
+function viewLostDetails(data) {
+    const lostDetailsTemplate = document.getElementById("viewdetails-lost").content.cloneNode(true);
+    const modal = lostDetailsTemplate.querySelector(".lost-details");
+
+    lostDetailsTemplate.querySelector(".lost-item-name").textContent = data.item_name;
+    lostDetailsTemplate.querySelector(".lost-category").textContent = data.item_category;
+    lostDetailsTemplate.querySelector(".lost-location").textContent = data.lost_location;
+    lostDetailsTemplate.querySelector(".lost-date").textContent = data.lost_date;
+    lostDetailsTemplate.querySelector(".lost-desc").textContent = data.item_desc;
+    lostDetailsTemplate.querySelector(".lost-owner-name").textContent = data.owner_full_name;
+    lostDetailsTemplate.querySelector(".lost-image").src = data.image_url;
+    lostDetailsTemplate.querySelector(".lost-student-id").textContent = data.owner_student_id;
+    lostDetailsTemplate.querySelector(".lost-course-section").textContent = data.owner_course_section;
+    lostDetailsTemplate.querySelector(".lost-fb").textContent = data.owner_fb;
+    lostDetailsTemplate.querySelector(".lost-phone").textContent = data.owner_phone;
+    lostDetailsTemplate.querySelector(".lost-email").textContent = data.owner_email;
+    lostDetailsTemplate.querySelector(".lost-created-at").textContent = data.created_at;
+    lostDetailsTemplate.querySelector(".lost-status").textContent = data.report_status;
+
+    lostDetailsTemplate.querySelector(".match-lost-btn").addEventListener("click", () => {
+        
+    });
+
+    lostDetailsTemplate.querySelector(".close-lost-btn").addEventListener("click", (e) => {
+        modal.remove();
+    });
+
+    document.body.append(lostDetailsTemplate);
 }

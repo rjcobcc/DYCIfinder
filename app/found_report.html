@@ -73,15 +73,12 @@
     <button id="set-status-btn">Set</button>
 
     <div id="matched-post" style="display: none;">
-        <h2>Owner</h2>
-    </div>
-
-    
-    <div style="display: none;">
-        <h2>Matched Report</h2>
-        <img alt="Claim Image">
-        <p>Selected Owner: <span></span></p>
-        <button>View Details</button>
+        <h2>Matched Owner Post</h2>
+        <div>
+            <img>
+            <p>Selected Owner: <span></span></p>
+            <button>View Details</button>
+        </div>
     </div>
 
     <h2>Claims</h2>
@@ -90,7 +87,7 @@
             <div class="claim">
                 <img class="claim-image" alt="Claim Image">
                 <p>Claimant: <span class="claimant-name"></span></p>
-                <button>View Details</button>
+                <button class="view-claim-btn">View Details</button>
             </div>
         </template>
     </div>
@@ -102,14 +99,14 @@
                 <img class="lost-image" alt="Lost Image">
                 <p>Item: <span class="lost-item-name"></span></p>
                 <p>Owner: <span class="lost-owner-name"></span></p>
-                <button>View Details</button>
+                <button class="view-lost-btn">View Details</button>
             </div>
         </template>
     </div>
 
     <template id="viewdetails-claim">
         <div class="claim-details">
-            <img class="claim-image" alt="Claim Image">
+            <img class="claim-detail-image" alt="Claim Image">
             <p>Description: <span class="claim-desc"></span></p>
             <p>Claimant: <span class="claimant-name"></span></p>
             <p>Student ID: <span class="claim-student-id"></span></p>
@@ -119,8 +116,8 @@
             <p>Email: <span class="claim-email"></span></p>
             <p>Status: <span class="claim-status"></span></p>
             <p>Submitted: <span class="claim-created-at"></span></p>
-            <button>Match</button>
-            <button>Close</button>
+            <button class="match-claim-btn">Match</button>
+            <button class="close-claim-btn">Close</button>
         </div>
     </template>
 
@@ -140,8 +137,8 @@
             <p>Email: <span class="lost-email"></span></p>
             <p>Status: <span class="lost-status"></span></p>
             <p>Submitted: <span class="lost-created-at"></span></p>
-            <button>Match</button>
-            <button>Close</button>
+            <button class="match-lost-btn">Match</button>
+            <button class="close-lost-btn">Close</button>
         </div>
     </template>
 
