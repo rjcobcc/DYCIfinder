@@ -214,7 +214,7 @@ async function loadClaims() {
 
 function viewClaimDetails(data) {
     const claimDetailsTemplate = document.getElementById("viewdetails-claim").content.cloneNode(true);
-    const modal = claimDetailsTemplate.querySelector(".claim-details");
+    const modal = claimDetailsTemplate.querySelector(".popup-overlay");
 
     claimDetailsTemplate.querySelector(".claim-desc").textContent = data.claim_desc;
     claimDetailsTemplate.querySelector(".claimant-name").textContent = data.owner_full_name;
@@ -269,7 +269,7 @@ async function loadLosts() {
 
 function viewLostDetails(data) {
     const lostDetailsTemplate = document.getElementById("viewdetails-lost").content.cloneNode(true);
-    const modal = lostDetailsTemplate.querySelector(".lost-details");
+    const modal = lostDetailsTemplate.querySelector(".popup-overlay");
 
     lostDetailsTemplate.querySelector(".lost-item-name").textContent = data.item_name;
     lostDetailsTemplate.querySelector(".lost-category").textContent = data.item_category;

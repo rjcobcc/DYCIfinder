@@ -3,142 +3,723 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./assets/popups.css">
     <title>DYCIfinder</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/popups.css">
+    <link rel="stylesheet" href="./assets/style.css">
+    <style id="page-styles">
+
+        /* ── TWO-COLUMN LAYOUT ── */
+        .two-col-layout {
+            display: flex;
+            gap: 28px;
+            align-items: start;
+        }
+
+        .col-left {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .col-right {
+            width: 450px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 90px;
+            max-height: calc(100vh - 110px);
+            overflow-y: auto;        /* add this */
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .col-right::-webkit-scrollbar { width: 4px; }
+        .col-right::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+        /* Stack on small screens */
+        @media (max-width: 900px) {
+            .two-col-layout { flex-direction: column; }
+            .col-right { position: static; width: 100%; max-height: none; }
+        }
+
+        /* Each container: fixed 2-col grid, own scroll */
+        #claim-container,
+        #lost-container {
+            display: grid;
+            grid-template-columns: repeat(2, 200px);
+            gap: 10px;
+            padding-bottom: 4px;
+        }
+
+        #claim-container::-webkit-scrollbar,
+        #lost-container::-webkit-scrollbar { width: 4px; }
+        #claim-container::-webkit-scrollbar-thumb,
+        #lost-container::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+        /* ── FORM LAYOUT ── */
+        #report-info-form {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            padding: 28px 28px 24px;
+        }
+
+        .form-section-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin: 24px 0 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--border);
+        }
+        .form-section-title:first-child { margin-top: 0; }
+
+        .form-label-custom {
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .form-control-custom {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 9px 12px;
+            width: 100%;
+            transition: border-color 0.15s, box-shadow 0.15s;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+        .form-control-custom:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(77,139,255,0.13);
+            background: #fff;
+        }
+
+        textarea.form-control-custom {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        /* Image upload area */
+        #image-upload-area {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        #found-image {
+            width: 100%;
+            max-width: 320px;
+            height: 200px;
+            object-fit: contain;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .file-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        input[type="file"]#foundpost-image {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        #upload-image {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--blue-mid);
+            background: #eef2ff;
+            border: 1px solid #c7d5ff;
+            border-radius: 7px;
+            padding: 7px 18px;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+            white-space: nowrap;
+        }
+        #upload-image:hover {
+            background: var(--blue-mid);
+            color: #fff;
+            border-color: transparent;
+        }
+
+        /* Save changes button */
+        #found-update-btn {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(90deg, var(--blue-start), var(--blue-mid));
+            border: none;
+            border-radius: 8px;
+            padding: 10px 32px;
+            cursor: pointer;
+            transition: opacity 0.15s, transform 0.12s;
+            margin-top: 8px;
+        }
+        #found-update-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+        /* ── STATUS ROW ── */
+        #status-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        #status-selection {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 32px 8px 12px;
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            transition: border-color 0.15s;
+        }
+        #status-selection:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        #set-status-btn {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(90deg, var(--blue-start), var(--blue-mid));
+            border: none;
+            border-radius: 8px;
+            padding: 9px 24px;
+            cursor: pointer;
+            transition: opacity 0.15s;
+        }
+        #set-status-btn:hover { opacity: 0.88; }
+
+        /* ── MATCHED OWNER PANEL ── */
+        #matched-post {
+            background: #eef2ff;
+            border: 1px solid #c7d5ff;
+            border-radius: var(--radius);
+            padding: 18px 20px;
+        }
+
+        #matched-post h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--blue-mid);
+            margin: 0 0 12px;
+        }
+
+        #matched-post > div {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        #matched-post img {
+            width: 56px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #c7d5ff;
+        }
+
+        #matched-post p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin: 0;
+            flex: 1;
+        }
+        #matched-post p span {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        #matched-post button {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--blue-mid);
+            background: #fff;
+            border: 1px solid #c7d5ff;
+            border-radius: 7px;
+            padding: 7px 16px;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+        }
+        #matched-post button:hover {
+            background: var(--blue-mid);
+            color: #fff;
+            border-color: transparent;
+        }
+
+        /* ── SECTION HEADING ── */
+        .section-heading {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 16px;
+            letter-spacing: -0.01em;
+        }
+
+        /* ── CLAIM / LOST CARDS ── */
+        .claim, .lost {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: box-shadow 0.18s, transform 0.15s;
+            position: relative;
+        }
+        .claim::before, .lost::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--blue-start), var(--accent));
+            opacity: 0;
+            transition: opacity 0.18s;
+        }
+        .claim:hover, .lost:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .claim:hover::before, .lost:hover::before { opacity: 1; }
+
+        .claim-image, .lost-image {
+            width: 100%;
+            height: 130px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+            display: block;
+        }
+
+        .claim-body, .lost-body {
+            padding: 12px 14px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            flex: 1;
+        }
+
+        .claim p, .lost p {
+            font-size: 0.83rem;
+            color: var(--text-muted);
+            margin: 0;
+            line-height: 1.45;
+        }
+        .claim p span, .lost p span {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .view-claim-btn, .view-lost-btn {
+            margin-top: 10px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.81rem;
+            font-weight: 600;
+            color: var(--blue-mid);
+            background: #eef2ff;
+            border: 1px solid #c7d5ff;
+            border-radius: 7px;
+            padding: 7px 0;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
+        }
+        .view-claim-btn:hover, .view-lost-btn:hover {
+            background: linear-gradient(90deg, var(--blue-start), var(--blue-mid));
+            color: #fff;
+            border-color: transparent;
+        }
+
+        /* ══════════════════════════════════════
+           POPUP OVERLAY (detail templates)
+        ══════════════════════════════════════ */
+        .popup-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(6, 8, 15, 0.55);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            animation: overlayIn 0.18s ease;
+        }
+        @keyframes overlayIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        .claim-details, .lost-details {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 8px 40px rgba(10,24,60,0.18);
+            padding: 32px 28px 24px;
+            width: 100%;
+            max-width: 680px;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            animation: cardIn 0.2s cubic-bezier(0.22,1,0.36,1);
+        }
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(18px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .claim-details::-webkit-scrollbar,
+        .lost-details::-webkit-scrollbar { width: 5px; }
+        .claim-details::-webkit-scrollbar-thumb,
+        .lost-details::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+        /* Top accent bar */
+        .claim-details::before, .lost-details::before {
+            content: '';
+            display: block;
+            height: 4px;
+            background: linear-gradient(90deg, var(--blue-start), var(--accent));
+            border-radius: 4px 4px 0 0;
+            margin: -32px -28px 24px;
+        }
+
+        .claim-details h3, .lost-details h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 20px;
+        }
+
+        .claim-details > p, .lost-details > p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin: 0 0 10px;
+            line-height: 1.55;
+        }
+        .claim-details > p span, .lost-details > p span {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .claim-detail-image, .lost-details .lost-image {
+            width: 100%;
+            height: auto;
+            max-height: none;
+            object-fit: contain;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .popup-divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 16px 0;
+        }
+
+        /* Popup action buttons */
+        .popup-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .match-claim-btn, .match-lost-btn {
+            flex: 1;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(90deg, var(--blue-start), var(--blue-mid));
+            border: none;
+            border-radius: 8px;
+            padding: 10px 0;
+            cursor: pointer;
+            transition: opacity 0.15s;
+        }
+        .match-claim-btn:hover, .match-lost-btn:hover { opacity: 0.88; }
+
+        .close-claim-btn, .close-lost-btn {
+            flex: 1;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 0;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+        }
+        .close-claim-btn:hover, .close-lost-btn:hover {
+            background: var(--border);
+            color: var(--text-primary);
+        }
+    </style>
 </head>
 <body>
+
     <header>
-        <h1><a href="index.html">DYCIfinder</a></h1>
-        <button onclick="window.location.href='search_found.html'">Found Items</button>
-        <button onclick="window.location.href='report_found.html'">Report Found</button>
-        <button onclick="window.location.href='report_lost.html'">Report Lost</button> 
-        <button onclick="window.location.href='profile.html'">Profile</button>
-        <button onclick="window.location.href='history.html'">History</button>
-        <hr>
+        <div class="header-top d-flex align-items-center">
+            <a href="index.html" class="brand">DYCI<span>finder</span></a>
+        </div>
+        <nav class="header-nav d-flex align-items-center">
+            <a class="nav-link-item" onclick="window.location.href='search_found.html'">Found Items</a>
+            <a class="nav-link-item" onclick="window.location.href='report_found.html'">Report Found</a>
+            <a class="nav-link-item" onclick="window.location.href='report_lost.html'">Report Lost</a>
+            <a class="nav-link-item" onclick="window.location.href='history.html'">History</a>
+            <a class="nav-link-item" onclick="window.location.href='profile.html'">Profile</a>
+            <a class="nav-link-item active" onclick="window.location.href='admin.html'">Admin</a>
+        </nav>
     </header>
 
-    <div id="report-info-form">
-        <label>Image</label>
-        <img id="found-image" alt="Item Image" src="./assets/loading.gif">
-        <br>
-        <input type="file" accept="image/*" id="foundpost-image">
-        <button id="upload-image">Save New Image</button>
-        <br>
-        <label>Item Name</label>
-        <input id="found-item-name" type="text">
-        <br>
-        <label>Category</label>
-        <select id="found-category-select">
-            <option>N/A</option>
-        </select>
-        <br>
-        <label>Description</label>
-        <textarea id="found-item-desc"></textarea>
-        <br>
-        <label>Location</label>
-        <select id="found-location-select">
-            <option>N/A</option>
-        </select>
-        <br>
-        <label>Find Date</label>
-        <input id="found-find-date" type="date">
-        <br>
-        <label>Finder Name</label>
-        <input id="found-finder-name" type="text">
-        <br>
-        <label>Student ID</label>
-        <input id="found-finder-student-id" type="text">
-        <br>
-        <label>Course Section</label>
-        <input id="found-finder-course-section" type="text">
-        <br>
-        <label>Facebook</label>
-        <input id="found-finder-fb" type="text">
-        <br>
-        <label>Phone</label>
-        <input id="found-finder-phone" type="text">
-        <br>
-        <label>Email</label>
-        <input id="found-finder-email" type="text">
-        <br>
-        <button id="found-update-btn">Save Changes</button>
-    </div>
-    <br>
-    <select id="status-selection">
-        <option>Pending</option>
-        <option>Unclaimed</option>
-        <option>To-claim</option>
-        <option>Claimed</option>
-    </select>
-    <button id="set-status-btn">Set</button>
+    <main class="container-fluid px-4 px-md-5 mt-4">
 
-    <div id="matched-post" style="display: none;">
-        <h2>Matched Owner Post</h2>
-        <div>
-            <img>
-            <p>Selected Owner: <span></span></p>
-            <button>View Details</button>
+        <div class="d-flex align-items-center justify-content-between mb-1">
+            <span class="section-label">Admin Panel</span>
         </div>
-    </div>
+        <h2 class="page-title mb-4">Found Report Details</h2>
 
-    <h2>Claims</h2>
-    <div id="claim-container">
-        <template id="claim-template">
-            <div class="claim">
-                <img class="claim-image" alt="Claim Image">
-                <p>Claimant: <span class="claimant-name"></span></p>
-                <button class="view-claim-btn">View Details</button>
-            </div>
-        </template>
-    </div>
+        <div class="two-col-layout">
 
-    <h2>Lost Reports</h2>
-    <div id="lost-container">
-        <template id="lost-template">
-            <div class="lost">
-                <img class="lost-image" alt="Lost Image">
-                <p>Item: <span class="lost-item-name"></span></p>
-                <p>Owner: <span class="lost-owner-name"></span></p>
-                <button class="view-lost-btn">View Details</button>
-            </div>
-        </template>
-    </div>
+            <!-- ════ LEFT: form + status + matched ════ -->
+            <div class="col-left">
+
+                <!-- REPORT FORM -->
+                <div id="report-info-form" class="mb-4">
+
+                    <p class="form-section-title">Item Photo</p>
+                    <div id="image-upload-area">
+                        <img id="found-image" alt="Item Image" src="./assets/loading.gif">
+                        <div class="file-row">
+                            <input type="file" accept="image/*" id="foundpost-image">
+                            <button id="upload-image">Save New Image</button>
+                        </div>
+                    </div>
+
+                    <p class="form-section-title">Item Info</p>
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <label class="form-label-custom" for="found-item-name">Item Name</label>
+                            <input class="form-control-custom" id="found-item-name" type="text">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label-custom" for="found-category-select">Category</label>
+                            <div class="select-wrapper">
+                                <select class="form-control-custom" id="found-category-select">
+                                    <option>N/A</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label-custom" for="found-item-desc">Description</label>
+                            <textarea class="form-control-custom" id="found-item-desc"></textarea>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label-custom" for="found-location-select">Location</label>
+                            <div class="select-wrapper">
+                                <select class="form-control-custom" id="found-location-select">
+                                    <option>N/A</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label-custom" for="found-find-date">Find Date</label>
+                            <input class="form-control-custom" id="found-find-date" type="date">
+                        </div>
+                    </div>
+
+                    <p class="form-section-title">Finder Info</p>
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <label class="form-label-custom" for="found-finder-name">Finder Name</label>
+                            <input class="form-control-custom" id="found-finder-name" type="text">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label-custom" for="found-finder-student-id">Student ID</label>
+                            <input class="form-control-custom" id="found-finder-student-id" type="text">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label-custom" for="found-finder-course-section">Course / Section</label>
+                            <input class="form-control-custom" id="found-finder-course-section" type="text">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label-custom" for="found-finder-fb">Facebook</label>
+                            <input class="form-control-custom" id="found-finder-fb" type="text">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label-custom" for="found-finder-phone">Phone</label>
+                            <input class="form-control-custom" id="found-finder-phone" type="text">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label-custom" for="found-finder-email">Email</label>
+                            <input class="form-control-custom" id="found-finder-email" type="text">
+                        </div>
+                        <div class="col-12">
+                            <button id="found-update-btn">Save Changes</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div><!-- /col-left -->
+
+            <!-- ════ RIGHT: status + claims + lost reports ════ -->
+            <div class="col-right">
+
+                <!-- STATUS ROW -->
+                <div class="card-surface p-3 d-flex align-items-center gap-3 flex-wrap">
+                    <span class="form-label-custom mb-0" style="white-space:nowrap;">Set Status</span>
+                    <div class="select-wrapper" style="min-width:140px;">
+                        <select id="status-selection">
+                            <option>Pending</option>
+                            <option>Unclaimed</option>
+                            <option>To-claim</option>
+                            <option>Claimed</option>
+                        </select>
+                    </div>
+                    <button id="set-status-btn">Set</button>
+                </div>
+
+                <!-- MATCHED OWNER -->
+                <div id="matched-post" style="display: none;">
+                    <h2>Matched Owner Post</h2>
+                    <div>
+                        <img alt="Owner post image">
+                        <p>Selected Owner: <span></span></p>
+                        <button>View Details</button>
+                    </div>
+                </div>
+
+                <!-- CLAIMS -->
+                <div class="mb-4">
+                    <h2 class="section-heading">Claims</h2>
+                    <div id="claim-container">
+                        <template id="claim-template">
+                            <div class="claim">
+                                <img class="claim-image" alt="Claim Image">
+                                <div class="claim-body">
+                                    <p>Claimant: <span class="claimant-name"></span></p>
+                                    <button class="view-claim-btn">View Details</button>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- LOST REPORTS -->
+                <div class="mb-4">
+                    <h2 class="section-heading">Lost Reports</h2>
+                    <div id="lost-container">
+                        <template id="lost-template">
+                            <div class="lost">
+                                <img class="lost-image" alt="Lost Image">
+                                <div class="lost-body">
+                                    <p>Item: <span class="lost-item-name"></span></p>
+                                    <p>Owner: <span class="lost-owner-name"></span></p>
+                                    <button class="view-lost-btn">View Details</button>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+            </div><!-- /col-right -->
+
+        </div><!-- /two-col-layout -->
+
+    </main>
+
+    <!-- ══════════════════════════════════════
+         POPUP TEMPLATES
+    ══════════════════════════════════════ -->
 
     <template id="viewdetails-claim">
-        <div class="claim-details">
-            <img class="claim-detail-image" alt="Claim Image">
-            <p>Description: <span class="claim-desc"></span></p>
-            <p>Claimant: <span class="claimant-name"></span></p>
-            <p>Student ID: <span class="claim-student-id"></span></p>
-            <p>Course Section: <span class="claim-course-section"></span></p>
-            <p>Facebook: <span class="claim-fb"></span></p>
-            <p>Phone: <span class="claim-phone"></span></p>
-            <p>Email: <span class="claim-email"></span></p>
-            <p>Status: <span class="claim-status"></span></p>
-            <p>Submitted: <span class="claim-created-at"></span></p>
-            <button class="match-claim-btn">Match</button>
-            <button class="close-claim-btn">Close</button>
+        <div class="popup-overlay">
+            <div class="claim-details">
+                <h3>Claim Details</h3>
+                <img class="claim-detail-image" alt="Claim Image">
+                <p>Description: <span class="claim-desc">—</span></p>
+                <hr class="popup-divider">
+                <p>Claimant: <span class="claimant-name">—</span></p>
+                <p>Student ID: <span class="claim-student-id">—</span></p>
+                <p>Course / Section: <span class="claim-course-section">—</span></p>
+                <p>Facebook: <span class="claim-fb">—</span></p>
+                <p>Phone: <span class="claim-phone">—</span></p>
+                <p>Email: <span class="claim-email">—</span></p>
+                <hr class="popup-divider">
+                <p>Status: <span class="claim-status">—</span></p>
+                <p>Submitted: <span class="claim-created-at">—</span></p>
+                <div class="popup-actions">
+                    <button class="match-claim-btn">Match</button>
+                    <button class="close-claim-btn">Close</button>
+                </div>
+            </div>
         </div>
     </template>
 
     <template id="viewdetails-lost">
-        <div class="lost-details">
-            <img class="lost-image" alt="Lost Image">
-            <p>Item: <span class="lost-item-name"></span></p>
-            <p>Category: <span class="lost-category"></span></p>
-            <p>Description: <span class="lost-desc"></span></p>
-            <p>Location: <span class="lost-location"></span></p>
-            <p>Date: <span class="lost-date"></span></p>
-            <p>Owner: <span class="lost-owner-name"></span></p>
-            <p>Student ID: <span class="lost-student-id"></span></p>
-            <p>Course Section: <span class="lost-course-section"></span></p>
-            <p>Facebook: <span class="lost-fb"></span></p>
-            <p>Phone: <span class="lost-phone"></span></p>
-            <p>Email: <span class="lost-email"></span></p>
-            <p>Status: <span class="lost-status"></span></p>
-            <p>Submitted: <span class="lost-created-at"></span></p>
-            <button class="match-lost-btn">Match</button>
-            <button class="close-lost-btn">Close</button>
+        <div class="popup-overlay">
+            <div class="lost-details">
+                <h3>Lost Report Details</h3>
+                <img class="lost-image" alt="Lost Image">
+                <p>Item: <span class="lost-item-name">—</span></p>
+                <p>Category: <span class="lost-category">—</span></p>
+                <p>Description: <span class="lost-desc">—</span></p>
+                <p>Location: <span class="lost-location">—</span></p>
+                <p>Date: <span class="lost-date">—</span></p>
+                <hr class="popup-divider">
+                <p>Owner: <span class="lost-owner-name">—</span></p>
+                <p>Student ID: <span class="lost-student-id">—</span></p>
+                <p>Course / Section: <span class="lost-course-section">—</span></p>
+                <p>Facebook: <span class="lost-fb">—</span></p>
+                <p>Phone: <span class="lost-phone">—</span></p>
+                <p>Email: <span class="lost-email">—</span></p>
+                <hr class="popup-divider">
+                <p>Status: <span class="lost-status">—</span></p>
+                <p>Submitted: <span class="lost-created-at">—</span></p>
+                <div class="popup-actions">
+                    <button class="match-lost-btn">Match</button>
+                    <button class="close-lost-btn">Close</button>
+                </div>
+            </div>
         </div>
     </template>
 

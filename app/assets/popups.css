@@ -32,23 +32,44 @@ template {
     color: #222;
 }
 
-.popup-content {
+.popup-content-container {
     margin: 0;
+    margin-bottom: 15px;
     display: block;
+    font-family: 'Syne', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
 }
 
 .popup-confirm {
-    display: inline-block;
-    padding: 10px 32px;
-    margin-top: 20px;
-    background: #0078d4;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
     color: #fff;
+    background: linear-gradient(90deg, var(--blue-start), var(--blue-mid));
+    border: none;
+    border-radius: 8px;
+    padding: 9px 26px;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: opacity 0.18s, transform 0.12s;
+    white-space: nowrap;
+}
+
+.popup-cancel {
+    flex: 1;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--blue-mid);
+    background: #eef2ff;
+    border: 1px solid #c7d5ff;
+    border-radius: 7px;
+    padding: 9px 26px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
 
 .popup-confirm:hover {

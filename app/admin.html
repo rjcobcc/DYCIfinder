@@ -3,73 +3,264 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./assets/popups.css">
     <title>DYCIfinder</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/popups.css">
+    <link rel="stylesheet" href="./assets/style.css">
+    <style id="page-styles">
+
+        /* ── FILTERS PANEL ── */
+        #filters-container label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        #filters-container input,
+        #filters-container select {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 12px;
+            width: 100%;
+            transition: border-color 0.15s, box-shadow 0.15s;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        #filters-container input:focus,
+        #filters-container select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(77,139,255,0.13);
+            background: #fff;
+        }
+
+        /* ── FOUND REPORTS GRID ── */
+        #found-reports-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 18px;
+        }
+
+        .found-post {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            transition: box-shadow 0.18s, transform 0.15s;
+            position: relative;
+            overflow: hidden;
+        }
+        .found-post::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--blue-start), var(--accent));
+            opacity: 0;
+            transition: opacity 0.18s;
+            z-index: 1;
+        }
+        .found-post:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .found-post:hover::before { opacity: 1; }
+
+        /* Item image */
+        .found-post .item-image {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            display: block;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .found-post-body {
+            padding: 16px 18px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            flex: 1;
+        }
+
+        .foundpost-name {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 4px;
+            letter-spacing: -0.01em;
+        }
+
+        .found-post p {
+            font-size: 0.84rem;
+            color: var(--text-muted);
+            margin: 0;
+            line-height: 1.5;
+        }
+        .found-post p span {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .post-meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        /* Action buttons row */
+        .found-post-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .publish-found-btn {
+            flex: 1;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(90deg, var(--blue-start), var(--blue-mid));
+            border: none;
+            border-radius: 7px;
+            padding: 8px 0;
+            cursor: pointer;
+            transition: opacity 0.15s, transform 0.12s;
+        }
+        .publish-found-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+        .update-found-btn {
+            flex: 1;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--blue-mid);
+            background: #eef2ff;
+            border: 1px solid #c7d5ff;
+            border-radius: 7px;
+            padding: 8px 0;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
+        }
+        .update-found-btn:hover {
+            background: var(--blue-mid);
+            color: #fff;
+            border-color: transparent;
+        }
+
+        /* ── PAGINATION ── */
+        #pagenav-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        #pagenav-container > span { font-size: 0.85rem; color: var(--text-muted); }
+        #current-page { font-weight: 700; color: var(--text-primary); }
+    </style>
 </head>
 <body>
+
     <header>
-        <h1><a href="index.html">DYCIfinder</a></h1>
-        <button onclick="window.location.href='search_found.html'">Found Items</button>
-        <button onclick="window.location.href='report_found.html'">Report Found</button>
-        <button onclick="window.location.href='report_lost.html'">Report Lost</button> 
-        <button onclick="window.location.href='profile.html'">Profile</button>
-        <button onclick="window.location.href='history.html'">History</button>
-        <hr>
+        <div class="header-top d-flex align-items-center">
+            <a href="index.html" class="brand">DYCI<span>finder</span></a>
+        </div>
+        <nav class="header-nav d-flex align-items-center">
+            <a class="nav-link-item" onclick="window.location.href='search_found.html'">Found Items</a>
+            <a class="nav-link-item" onclick="window.location.href='report_found.html'">Report Found</a>
+            <a class="nav-link-item" onclick="window.location.href='report_lost.html'">Report Lost</a>
+            <a class="nav-link-item" onclick="window.location.href='history.html'">History</a>
+            <a class="nav-link-item" onclick="window.location.href='profile.html'">Profile</a>
+            <a class="nav-link-item active" onclick="window.location.href='admin.html'">Admin</a>
+        </nav>
     </header>
 
-    <main>
-        <h2>Found Reports</h2>
+    <main class="container-fluid px-4 px-md-5 mt-4">
 
-        <div id="filters-container">
-            <label>Keyword</label>
-            <input type="text" id="keyword-input">
+        <div class="d-flex align-items-center justify-content-between mb-1">
+            <span class="section-label">Admin Panel</span>
+        </div>
+        <h2 class="page-title mb-4">Found Reports</h2>
 
-            <label>Category</label>
-            <select id="category-selection">
-                <option>Any</option>
-            </select>
-
-            <label>Location</label>
-            <select id="location-selection">
-                <option>Anywhere</option>
-            </select>
-
-            <label>Sort by</label>
-            <select id="sort-options">
-                <option>Newest first</option>
-                <option>Oldest first</option>
-            </select>
-
-            <button id="apply-filters-btn">Apply</button>
+        <!-- Filters -->
+        <div id="filters-container" class="card-surface p-3 p-md-4 mb-4">
+            <div class="row g-3 align-items-end">
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <label for="keyword-input">Keyword</label>
+                    <input type="text" id="keyword-input" placeholder="e.g. wallet, phone…">
+                </div>
+                <div class="col-12 col-sm-6 col-lg-2">
+                    <label for="category-selection">Category</label>
+                    <div class="select-wrapper">
+                        <select id="category-selection">
+                            <option>Any</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-2">
+                    <label for="location-selection">Location</label>
+                    <div class="select-wrapper">
+                        <select id="location-selection">
+                            <option>Anywhere</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-2">
+                    <label for="sort-options">Sort by</label>
+                    <div class="select-wrapper">
+                        <select id="sort-options">
+                            <option>Newest first</option>
+                            <option>Oldest first</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-auto">
+                    <button id="apply-filters-btn" class="btn-primary-custom">Apply Filters</button>
+                </div>
+            </div>
         </div>
 
+        <!-- Found reports grid -->
         <div id="found-reports-container">
             <template id="foundpost-template">
                 <div class="found-post">
-                    <hr>
-                    <img class="item-image">
-                    <h3 class="foundpost-name">Item Name</h3>
-                    <p>Category: 
-                        <span class="foundpost-category">Category123</span>
-                    </p>
-                    <p>Found at: 
-                        <span class="foundpost-location">Location123</span>
-                    </p>
-                    <p>Found on: 
-                        <span class="foundpost-date">2026-04-10</span>
-                    </p>
-                    <button class="publish-found-btn">Publish</button>
-                    <button class="update-found-btn">Update</button>
-                    <hr>
+                    <img class="item-image" alt="Item photo">
+                    <div class="found-post-body">
+                        <h3 class="foundpost-name">Item Name</h3>
+                        <div class="post-meta-row">
+                            <span class="post-badge">📁 <span class="foundpost-category">Category</span></span>
+                            <span class="post-badge">📍 <span class="foundpost-location">Location</span></span>
+                        </div>
+                        <p>Found on: <span class="foundpost-date">2026-04-10</span></p>
+                        <div class="found-post-actions">
+                            <button class="publish-found-btn">Publish</button>
+                            <button class="update-found-btn">Update</button>
+                        </div>
+                    </div>
                 </div>
             </template>
         </div>
 
-        <div id="pagenav-container">
-            <button id="prev-pagebtn">Prev</button>
+        <!-- Pagination -->
+        <div id="pagenav-container" class="mt-4">
+            <button id="prev-pagebtn" class="btn-page">← Prev</button>
             <span>Page <span id="current-page">1</span></span>
-            <button id="next-pagebtn">Next</button>
+            <button id="next-pagebtn" class="btn-page">Next →</button>
         </div>
+
     </main>
 
     <script type="module" src="js/admin.js"></script>
