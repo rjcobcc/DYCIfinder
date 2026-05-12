@@ -173,6 +173,18 @@
             margin: 0;
             color: var(--text-muted);
         }
+
+        .export-btn {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--blue-mid);
+            background: #eef2ff;
+            border: 1px solid #c7d5ff;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
+        }
     </style>
 </head>
 <body>
@@ -199,7 +211,12 @@
                 <h2 class="page-title mb-2">Latest Found Reports</h2>
                 <p class="text-muted mb-0">Review the newest submitted reports and keep your lookup data up to date.</p>
             </div>
-            <button id="open-browser-btn" class="btn-secondary-custom">Open full admin browser</button>
+            <div class="d-flex flex-wrap gap-2">
+                <button id="export-foundreports-btn" class="btn-secondary-custom export-btn">Export Found Reports</button>
+                <button id="export-claims-btn" class="btn-secondary-custom export-btn">Export Claims</button>
+                <button id="export-lostreports-btn" class="btn-secondary-custom export-btn">Export Lost Reports</button>
+                <button id="open-browser-btn" class="btn-primary-custom">Open full admin browser</button>
+            </div>
         </div>
 
         <section class="card-surface p-4 mb-4">
@@ -279,6 +296,8 @@
         </div>
     </main>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="module" src="js/dashboard.js"></script>
 </body>
 </html>

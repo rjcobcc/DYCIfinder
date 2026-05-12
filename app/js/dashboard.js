@@ -6,6 +6,9 @@ document.addEventListener('DOMContentLoaded', function () {
         window.location.href = 'admin.html';
     });
 
+    document.getElementById('export-foundreports-btn').addEventListener('click', exportFoundReportsPDF);
+    document.getElementById('export-claims-btn').addEventListener('click', exportClaimsPDF);
+    document.getElementById('export-lostreports-btn').addEventListener('click', exportLostReportsPDF);
     document.getElementById('add-location-btn').addEventListener('click', addLocation);
     document.getElementById('add-category-btn').addEventListener('click', addCategory);
 
@@ -13,6 +16,170 @@ document.addEventListener('DOMContentLoaded', function () {
     loadCampusLocations();
     loadItemCategories();
 });
+
+async function exportFoundReportsPDF() {
+    const button = document.getElementById('export-foundreports-btn');
+    const originalText = button.textContent;
+    button.disabled = true;
+    button.textContent = 'Preparing Found Reports...';
+
+    try {
+        const reports = await fetchAllFoundReports();
+        if (!reports.length) {
+            await popupMessage('No found reports are available for export.');
+            return;
+        }
+
+        await createPDF(
+            'Found Reports',
+            'dycifinder_found_reports.pdf',
+            ['ID', 'Item Name', 'Category', 'Location', 'Date', 'Status'],
+            reports.map((item) => [
+                item.id,
+                item.item_name,
+                item.item_category,
+                item.find_location,
+                item.find_date,
+                item.report_status
+            ])
+        );
+    }
+    catch (error) {
+        console.error(error);
+        await popupMessage('Unable to export found reports.');
+    }
+    finally {
+        button.disabled = false;
+        button.textContent = originalText;
+    }
+}
+
+async function exportClaimsPDF() {
+    const button = document.getElementById('export-claims-btn');
+    const originalText = button.textContent;
+    button.disabled = true;
+    button.textContent = 'Preparing Claims...';
+
+    try {
+        const claims = await fetchAllClaims();
+        if (!claims.length) {
+            await popupMessage('No claims are available for export.');
+            return;
+        }
+
+        await createPDF(
+            'Found Report Claims',
+            'dycifinder_claims.pdf',
+            ['Claim ID', 'Found Report ID', 'Item Name', 'Claimant', 'Status', 'Contact', 'Claim Description'],
+            claims.map((claim) => [
+                claim.id,
+                claim.foundreport_id,
+                claim.item_name || 'N/A',
+                claim.owner_full_name || 'N/A',
+                claim.claim_status || 'N/A',
+                claim.owner_phone || claim.owner_email || 'N/A',
+                claim.claim_desc || 'N/A'
+            ])
+        );
+    }
+    catch (error) {
+        console.error(error);
+        await popupMessage('Unable to export claims.');
+    }
+    finally {
+        button.disabled = false;
+        button.textContent = originalText;
+    }
+}
+
+async function exportLostReportsPDF() {
+    const button = document.getElementById('export-lostreports-btn');
+    const originalText = button.textContent;
+    button.disabled = true;
+    button.textContent = 'Preparing Lost Reports...';
+
+    try {
+        const reports = await fetchAllLostReports();
+        if (!reports.length) {
+            await popupMessage('No lost reports are available for export.');
+            return;
+        }
+
+        await createPDF(
+            'Lost Reports',
+            'dycifinder_lost_reports.pdf',
+            ['ID', 'Item Name', 'Category', 'Location', 'Date', 'Status'],
+            reports.map((item) => [
+                item.id,
+                item.item_name,
+                item.item_category,
+                item.lost_location,
+                item.lost_date,
+                item.report_status
+            ])
+        );
+    }
+    catch (error) {
+        console.error(error);
+        await popupMessage('Unable to export lost reports.');
+    }
+    finally {
+        button.disabled = false;
+        button.textContent = originalText;
+    }
+}
+
+async function createPDF(title, filename, head, body) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: 'pt', format: 'letter' });
+    const margin = 40;
+    let cursorY = 40;
+
+    doc.setFontSize(18);
+    doc.text('DYCIfinder Export', margin, cursorY);
+    cursorY += 24;
+    doc.setFontSize(10);
+    doc.text(`Table: ${title}`, margin, cursorY);
+    cursorY += 18;
+    doc.text(`Generated: ${new Date().toLocaleString()}`, margin, cursorY);
+    cursorY += 24;
+
+    doc.autoTable({
+        startY: cursorY,
+        margin: { left: margin, right: margin },
+        head: [head],
+        body,
+        styles: { fontSize: 8, cellPadding: 4, overflow: 'linebreak' },
+        headStyles: { fillColor: [40, 116, 240] },
+        theme: 'grid'
+    });
+
+    doc.save(filename);
+}
+
+async function fetchAllFoundReports() {
+    const response = await fetchJson('/admin/get_all_foundreports.php', {});
+    if (!response.success) {
+        throw new Error('Failed to load found reports');
+    }
+    return response.data || [];
+}
+
+async function fetchAllLostReports() {
+    const response = await fetchJson('/admin/get_all_losts.php', {});
+    if (!response.success) {
+        throw new Error('Failed to load lost reports');
+    }
+    return response.data || [];
+}
+
+async function fetchAllClaims() {
+    const response = await fetchJson('/admin/get_all_claims.php', {});
+    if (!response.success) {
+        throw new Error('Failed to load claims');
+    }
+    return response.data || [];
+}
 
 async function fetchJson(path, body = null) {
     const result = await fetch(API_URL + path, {

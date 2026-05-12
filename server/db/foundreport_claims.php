@@ -61,6 +61,15 @@ function get_claims($conn, $foundID) { // returns [] or [['id' => int, 'item_nam
     return $data;
 }
 
+function get_all_claims($conn) {
+    $sql = "SELECT frc.*, fr.item_name FROM foundreport_claims frc LEFT JOIN found_reports fr ON frc.foundreport_id = fr.id ORDER BY frc.id DESC";
+    $result = $conn->query($sql);
+    if (!$result) {
+        return [];
+    }
+    return $result->fetch_all(MYSQLI_ASSOC);
+}
+
 
 
 function set_claims_statuses($conn, $foundID, $status) { // returns int (number of rows updated) or 0 if update failed
