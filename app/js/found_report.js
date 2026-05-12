@@ -9,6 +9,7 @@ const foundReportID = new URLSearchParams(window.location.search).get('id');
 let runningLoadFoundReportInfo = false;
 let runningUpdateFoundReport = false;
 let runningSaveNewImage = false;
+let runningSetStatus = false;
 let foundReportImageSRC = "";
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -23,6 +24,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     document.getElementById("found-update-btn").addEventListener("click", updateFoundReport);
     document.getElementById("foundpost-image").addEventListener("change", function () { replaceImage(this, "found-image", foundReportImageSRC); })
     document.getElementById("upload-image").addEventListener("click", saveNewImage)
+    document.getElementById("set-status-btn").addEventListener("click", setStatus)
 });
 
 
@@ -43,6 +45,7 @@ async function loadFoundReportInfo() {
     const fbInput = document.getElementById("found-finder-fb");
     const phoneInput = document.getElementById("found-finder-phone");
     const emailInput = document.getElementById("found-finder-email");
+    const statusSelect = document.getElementById("status-selection")
 
     let data;
     try {
@@ -79,6 +82,7 @@ async function loadFoundReportInfo() {
     fbInput.value = data.finder_fb;
     phoneInput.value = data.finder_phone;
     emailInput.value = data.finder_email;
+    statusSelect.value = data.report_status;
 
     runningLoadFoundReportInfo = false;
 }
@@ -295,4 +299,25 @@ function viewLostDetails(data) {
     });
 
     document.body.append(lostDetailsTemplate);
+}
+
+
+
+async function setStatus() {
+    if (runningSetStatus) return;
+    runningSetStatus = true;
+
+    const status = document.getElementById("status-selection").value;
+
+    const result = await fetch(API_URL + "/admin/set_foundreport_status.php", {
+        method: "POST", 
+        headers: {"Content-Type":"application/json"}, 
+        body: JSON.stringify({id: foundReportID, status: status})
+    });
+    const response = await result.json();
+    console.log(response);
+
+    if (!response.success) popupMessage("Failed to set status.<br>Please try again.");
+
+    runningSetStatus = false;
 }
