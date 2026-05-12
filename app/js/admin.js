@@ -10,6 +10,13 @@ let runningPublishReport = false;
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("prev-pagebtn").addEventListener("click", goPrevPage);
     document.getElementById("next-pagebtn").addEventListener("click", goNextPage);
+    const dashboardButton = document.getElementById("open-dashboard-btn");
+    if (dashboardButton) {
+        dashboardButton.addEventListener("click", function () {
+            window.location.href = 'dashboard.html';
+        });
+    }
+
     document.getElementById("apply-filters-btn").addEventListener("click", loadFoundPosts);
 
     loadSelection("location-selection", "get_campuslocations.php", "location_name");

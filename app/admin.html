@@ -195,7 +195,7 @@
             <a class="nav-link-item" onclick="window.location.href='report_lost.html'">Report Lost</a>
             <a class="nav-link-item" onclick="window.location.href='history.html'">History</a>
             <a class="nav-link-item" onclick="window.location.href='profile.html'">Profile</a>
-            <a class="nav-link-item active" onclick="window.location.href='admin.html'">Admin</a>
+            <a class="nav-link-item active" onclick="window.location.href='dashboard.html'">Admin</a>
         </nav>
     </header>
 
@@ -204,7 +204,10 @@
         <div class="d-flex align-items-center justify-content-between mb-1">
             <span class="section-label">Admin Panel</span>
         </div>
-        <h2 class="page-title mb-4">Found Reports</h2>
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h2 class="page-title mb-0">Found Reports</h2>
+            <button id="open-dashboard-btn" class="btn-secondary-custom">Open dashboard</button>
+        </div>
 
         <!-- Filters -->
         <div id="filters-container" class="card-surface p-3 p-md-4 mb-4">

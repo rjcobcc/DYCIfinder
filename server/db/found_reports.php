@@ -186,6 +186,18 @@ function get_foundreports($conn, $page, $keyword, $category, $location, $status,
 
 
 
+function get_latest_foundreports($conn, $limit = 6) {
+    $sql = "SELECT id, item_name, item_category, find_location, find_date, image_url, report_status FROM found_reports ORDER BY id DESC LIMIT ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $limit);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $data = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+    return $data;
+}
+
+
 function update_foundreport(
     $conn,
     $item_id,

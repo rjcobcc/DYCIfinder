@@ -51,7 +51,7 @@ async function submitLoginForm() {
         if (response.success) {
             switch(response.data['user_role']) {
                 case "Admin": 
-                    window.location.href = "admin.html";
+                    window.location.href = "dashboard.html";
                 break;
                 case "Normal": 
                     window.location.href = "profile.html";
