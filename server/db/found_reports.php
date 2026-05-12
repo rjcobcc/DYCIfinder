@@ -128,7 +128,7 @@ function get_foundreport($conn, $id) { // returns null or ['item_name' => string
 
 
 
-function get_foundreports($conn, $page, $keyword, $category, $location, $order) { // returns [] or [['id' => int, 'item_name' => string, ...], ...]
+function get_foundreports($conn, $page, $keyword, $category, $location, $status, $order) { // returns [] or [['id' => int, 'item_name' => string, ...], ...]
     $pageLimit = 9;
     $sql = "SELECT id, item_name, item_category, find_location, find_date, image_url, report_status FROM found_reports WHERE 1 = 1";
     $params = [];
@@ -151,6 +151,12 @@ function get_foundreports($conn, $page, $keyword, $category, $location, $order) 
     if (!empty($location) && $location !== 'Anywhere') {
         $sql .= " AND find_location = ?";
         $params[] = $location;
+        $types .= "s";
+    }
+
+    if (!empty($status) && $status !== 'All') {
+        $sql .= " AND report_status = ?";
+        $params[] = $status;
         $types .= "s";
     }
     

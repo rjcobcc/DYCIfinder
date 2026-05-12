@@ -121,6 +121,17 @@
             margin-bottom: 4px;
         }
 
+        .status-badge {
+            font-weight: 600;
+            border-radius: 12px;
+            padding: 2px 8px;
+            font-size: 0.75rem;
+        }
+        .status-badge.pending { background: #fff3cd; color: #856404; }
+        .status-badge.unclaimed { background: #d1ecf1; color: #0c5460; }
+        .status-badge.to-claim { background: #ffeaa7; color: #e17055; }
+        .status-badge.claimed { background: #d4edda; color: #155724; }
+
         /* Action buttons row */
         .found-post-actions {
             display: flex;
@@ -219,6 +230,18 @@
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-lg-2">
+                    <label for="status-selection">Status</label>
+                    <div class="select-wrapper">
+                        <select id="status-selection">
+                            <option>All</option>
+                            <option>Pending</option>
+                            <option>Unclaimed</option>
+                            <option>To-claim</option>
+                            <option>Claimed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-2">
                     <label for="sort-options">Sort by</label>
                     <div class="select-wrapper">
                         <select id="sort-options">
@@ -241,6 +264,7 @@
                     <div class="found-post-body">
                         <h3 class="foundpost-name">Item Name</h3>
                         <div class="post-meta-row">
+                            <span class="post-badge status-badge">⏳ Pending</span>
                             <span class="post-badge">📁 <span class="foundpost-category">Category</span></span>
                             <span class="post-badge">📍 <span class="foundpost-location">Location</span></span>
                         </div>

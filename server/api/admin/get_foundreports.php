@@ -11,7 +11,7 @@ admin_block();
 try {
     $conn = new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
     $data = json_decode(file_get_contents("php://input"), true);
-    $output = get_foundreports($conn, $data['currentPage'], $data['keyword'], $data['category'], $data['location'], $data['order']);
+    $output = get_foundreports($conn, $data['currentPage'], $data['keyword'], $data['category'], $data['location'], $data['status'], $data['order']);
 
     echo json_encode([
         "success" => true,

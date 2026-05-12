@@ -28,6 +28,7 @@ async function loadFoundPosts() {
     const keyword = document.getElementById("keyword-input").value.trim();
     const category = document.getElementById("category-selection").value;
     const location = document.getElementById("location-selection").value;
+    const status = document.getElementById("status-selection").value;
     const order = document.getElementById("sort-options").value;
 
     let response;
@@ -36,7 +37,7 @@ async function loadFoundPosts() {
             method: "POST",
             headers: {"Content-Type":"application/json"},
             body: JSON.stringify({
-                keyword, category, location, order, currentPage,
+                keyword, category, location, status, order, currentPage,
             })
         });
         response = await result.json();
@@ -67,6 +68,35 @@ async function loadFoundPosts() {
         clone.querySelector(".foundpost-location").textContent = post['find_location'];
         clone.querySelector(".foundpost-date").textContent = post['find_date'];
         clone.querySelector(".foundpost-category").textContent = post['item_category'];
+        
+        // Set status badge
+        const statusBadge = clone.querySelector(".status-badge");
+        const status = post['report_status'];
+        let icon = "";
+        let className = "";
+        switch (status) {
+            case "Pending":
+                icon = "⏳";
+                className = "pending";
+                break;
+            case "Unclaimed":
+                icon = "✅";
+                className = "unclaimed";
+                break;
+            case "To-claim":
+                icon = "⚠️";
+                className = "to-claim";
+                break;
+            case "Claimed":
+                icon = "🎉";
+                className = "claimed";
+                break;
+            default:
+                icon = "❓";
+                className = "pending";
+        }
+        statusBadge.textContent = `${icon} ${status}`;
+        statusBadge.className = `post-badge status-badge ${className}`;
         
         clone.querySelector(".update-found-btn").addEventListener("click", function () {
             window.location.href = `found_report.html?id=${post['id']}`;
